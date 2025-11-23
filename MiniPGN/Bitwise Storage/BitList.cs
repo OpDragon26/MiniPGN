@@ -8,11 +8,11 @@ public class BitList
     private int LastFilled => (int)(Count % 8); // relevant bits in the last byte
     private ulong Count;
 
-    public void AddBits(ulong value, int bits)
+    public void AddBits(ushort value, int bits)
     {
         for (int b = bits - 1; b >= 0; b--)
         {
-            ulong relevant = value >> b;
+            ushort relevant = (ushort)(value >> b);
             AddBit((byte)relevant);
         }
     }
