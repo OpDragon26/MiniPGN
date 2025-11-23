@@ -6,7 +6,7 @@ public class BitList
     
     private readonly List<byte> InnerList = [];
     private int LastFilled => (int)(Count % 8); // relevant bits in the last byte
-    public ulong Count;
+    private ulong Count;
 
     public void AddBits(ulong value, int bits)
     {
@@ -18,7 +18,7 @@ public class BitList
     }
 
     // adds the most relevant bit to the 
-    public void AddBit(byte bit)
+    private void AddBit(byte bit)
     {
         if (LastFilled == 0)
             InnerList.Add(0);
