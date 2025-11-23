@@ -10,7 +10,7 @@ public class Board(PieceBoard board, Bitboard bitboards, int turn)
 {
     private int turn = turn;
     private PieceBoard board = board;
-    private Bitboard bitboards = bitboards;
+    public Bitboard bitboards = bitboards;
     
     public Board(string FEN) : this(ParsePieceBoard(FEN.Split(' ')[0]), new(), (FEN.Split(' ')[1][0] == 'w' ? 0 : 1))
     {

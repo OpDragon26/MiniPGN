@@ -11,4 +11,9 @@ public static class Utils
     {
         return 1UL << index;
     }
+
+    public static ulong GetSquare(int file, int rank)
+    {
+        return GetSquare(GetIndex(file, rank));
+    }
 }

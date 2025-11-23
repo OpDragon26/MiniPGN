@@ -27,7 +27,7 @@ public static class Display
             boardString += "# h g f e d c b a";
             for (int rank = 0; rank < 8; rank++)
             {
-                boardString += $"{rank} ";
+                boardString += $"\n{rank} ";
                 for (int file = 7; file >= 0; file--)
                 {
                     byte piece = board[file, rank];
@@ -42,6 +42,39 @@ public static class Display
     {
         PieceTable actual = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? Normal : Windows;
         return GetBoardString(board, perspective, actual);
+    }
+
+    public static string GetBitboardString(ulong bitboard, int perspective = 0, char on = '#', char off = ' ')
+    {
+        string boardString = "";
+        
+        if (perspective == 0)
+        {
+            boardString += "# a b c d e f g h";
+            for (int rank = 7; rank >= 0; rank--)
+            {
+                boardString += $"\n{rank} ";
+                for (int file = 0; file < 8; file++)
+                {
+                    bool s = (bitboard & Utils.GetSquare(file, rank)) != 0;
+                    boardString += $"{(s ? on : off)} ";
+                }
+            }
+        }
+        else
+        {
+            boardString += "# h g f e d c b a";
+            for (int rank = 0; rank < 8; rank++)
+            {
+                boardString += $"\n{rank} ";
+                for (int file = 7; file >= 0; file--)
+                {
+                    bool s = (bitboard & Utils.GetSquare(file, rank)) != 0;
+                    boardString += $"{(s ? on : off)} ";
+                }
+            }
+        }
+        return boardString;
     }
 
     private static readonly PieceTable Normal = new(
