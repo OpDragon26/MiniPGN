@@ -1,1 +1,3 @@
-﻿Console.WriteLine("Hello World");
+﻿using MiniPGN.Minimizer;
+
+//EncoderProfile Profile = FileReader.GetProfile(args);
