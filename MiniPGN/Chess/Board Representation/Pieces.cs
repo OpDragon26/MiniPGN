@@ -1,4 +1,4 @@
-namespace MiniPGN.Board_Representation;
+namespace MiniPGN.Chess.Board_Representation;
 
 public static class Pieces
 {

@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace MiniPGN.Board_Representation;
+namespace MiniPGN.Chess.Board_Representation;
 using static Utils;
 using static Pieces;
 using static Parsing.FENParser;

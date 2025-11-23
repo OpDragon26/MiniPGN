@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
-using MiniPGN.Board_Representation;
+using MiniPGN.Chess.Board_Representation;
 
-namespace MiniPGN.Parsing;
+namespace MiniPGN.Chess.Parsing;
 
 public static class Display
 {

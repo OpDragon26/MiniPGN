@@ -1,4 +1,4 @@
-namespace MiniPGN.Board_Representation;
+namespace MiniPGN.Chess.Board_Representation;
 
 public class Move(int source, int target, byte promotion = 0b0000, Flag flag = Flag.None)
 {
