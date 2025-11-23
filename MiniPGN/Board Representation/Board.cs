@@ -3,12 +3,19 @@ using System.Runtime.CompilerServices;
 namespace MiniPGN.Board_Representation;
 using static Utils;
 using static Pieces;
+using static Parsing.FENParser;
+using static Parsing.Display;
 
-public class Board
+public class Board(PieceBoard board, Bitboard bitboards, int turn)
 {
-    private int turn;
-    private PieceBoard board;
-    private Bitboard bitboards;
+    private int turn = turn;
+    private PieceBoard board = board;
+    private Bitboard bitboards = bitboards;
+    
+    public Board(string FEN) : this(ParsePieceBoard(FEN.Split(' ')[0]), new(), (FEN.Split(' ')[1][0] == 'w' ? 0 : 1))
+    {
+        bitboards = FillBitboard(board);
+    }
     
     public void MakeMove(Move move)
     {
@@ -30,6 +37,8 @@ public class Board
 
         if ((byte)move.Flag > 1)
             HandleSpecialMove(move);
+
+        turn = 1 - turn;
     }
 
     private void HandleSpecialMove(Move move)
@@ -81,6 +90,12 @@ public class Board
             } break;
         }
     }
+
+    public override string ToString()
+    {
+        return GetBoardString(this);
+    }
+
     public byte this[int index]
     {
         get => board[index];
@@ -95,7 +110,7 @@ public class Board
 
     public Board Clone()
     {
-        return new Board { board = board, bitboards = bitboards , turn = turn };
+        return new Board(board, bitboards, turn);
     }
 }
 
@@ -103,6 +118,12 @@ public class Board
 public struct PieceBoard
 {
     public byte piece;
+    
+    public byte this[int file, int rank]
+    {
+        get => this[GetIndex(file, rank)];
+        set => this[GetIndex(file, rank)] = value;
+    }
 }
 
 [InlineArray(15)]

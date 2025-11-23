@@ -1,6 +1,5 @@
 ﻿using MiniPGN.Bitwise_Storage;
+using MiniPGN.Board_Representation;
 
-BitList TestList = new BitList();
-TestList.AddBits(0b001111000101011UL, 24);
-
-Console.WriteLine(TestList.ConvertToBase(2));
+Board test = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+Console.WriteLine(test);
