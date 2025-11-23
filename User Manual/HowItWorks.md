@@ -6,7 +6,7 @@ Next is the version of the program used, for example `76 30 31 2E 30 30` for "v0
 
 Followed by details about how the PGNs were encoded. This includes information about what the program is expecting to decode, so that it can act accordingly. For example, whether any metadata, like the names of players or the time control, is stored with the games, or is it simply a list of games.
 
-The length of this portion may change version to version, currently it's just two bytes. `44 4E` for "DI": default for the version, and ignore metadata.
+The length of this portion may change version to version, currently it's just two bytes. `46 45` for "FE": fast, and exclude metadata
 ## Move encoding
 ### Standard/default:
 If the first bit of the move is `0`, that means the move is a pawn move
@@ -56,4 +56,5 @@ If the first bit is `1`, it means the move is a piece move
 &emsp;&emsp;The total number of bytes is 12 for non-disambiguated moves and 15 for disambiguated moves
 &emsp;&emsp;`1 00 001 110 110` is the binary representation of Ne5
 &emsp;&emsp;`1 11 101 010 110 110` is the binary representation of Nf3e5
+
 
