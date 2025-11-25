@@ -6,55 +6,39 @@ Next is the version of the program used, for example `76 30 31 2E 30 30` for "v0
 
 Followed by details about how the PGNs were encoded. This includes information about what the program is expecting to decode, so that it can act accordingly. For example, whether any metadata, like the names of players or the time control, is stored with the games, or is it simply a list of games.
 
-The length of this portion may change version to version, currently it's just two bytes. `46 45` for "FE": fast, and exclude metadata
+The length of this portion may change version to version, currently it's just two bytes, for example `53 49` "SI" for Standard encoding and Include metadata
 ## Move encoding
 ### Standard/default:
-If the first bit of the move is `0`, that means the move is a pawn move
+If the first (most significant) bit of the move is `0`, that means the move is a non-promoting pawn move
 
-&emsp;If the second bit is also `0`, the move is a single pawn move forward
+- If the second bit is `0`, either a pawn is moving forward to the square or capturing it from the left (from white's perspective) and if it's a `1`, a pawn capturing from the right
+  - The following 6 bits represent the target square, totaling exactly 8 bits
+  - The byte representation of both cxd5 and d5 would be `00 011 100` (these two moves are not possible on a board at the same time), and the byte representation of exd5 would be `01 011 100`.
 
-&emsp;&emsp;The next 6 bits stand for the target square - 3 bits for the file and rank each, resulting in a total of 8 bits
+If the first bit is `1`
+- And the second is `0`, that means only one piece could move to the target square
+  - The next 6 bits represent the target square for a total of 8 bits
+  - Making sure that such moves only take up one byte instead of 2 doesn't seem like it helps much, however this would nearly halve the size of endgames
+  - The byte representation of Qf7, if no other piece can move to the square, would be `10 101 110`
 
-&emsp;&emsp;`00 100 011` is the binary representation of `e4`
+- If the second bit is `1`
+  - And the 3rd bit is `0`, that means the move is a promotion, and the next 3 bits represent the piece being promoted to
+    - In the second byte, since the files are always given, 3 bits represent the source file and 3 bits represent the target file. This is necessary for disambiguation
+    - The byte representation of exd8=Q would be `110 101 00  100 011 00`
 
-&emsp;If instead the second bit is `1`
+  - If the 3rd bit is `1` that means the move is a piece move, if multiple other pieces could move to the target square
+    - The next 2 bits represent disambiguation
+    - `00` means the move was not disambiguated
+      - The next 3 bits represent the piece being moved
+      - The 6 bits stored in the second byte represent the target square
+      - The byte representation of Nc3 would be `111 00 010  010 010 00`
+    - `10` file, `01` rank, `11` double
+      - The next 3 bits represent the piece moved to make it easier to convert back to algebraic notation
+      - The 2nd byte stores the source square
+      - The 3rd byte stores the target square
+      - The byte representation of Nb1c3 would be `111 11 010  001 000 00  010 010 00`
 
-&emsp;&emsp;And the 3rd bit is `0`, that means the move is a pawn capture
+Control characters are bytes that cannot normally appear
+The byte `11100111` would mean a move with an invalid piece
 
-&emsp;&emsp;&emsp;A square can only be captured by a pawn from two files. The next bit acts as a disambiguator, even when there is no actual need for disambiguation.
-
-&emsp;&emsp;&emsp;`0` means it's the file to the left (previous) and `1` means it's the one to the right (next)
-
-&emsp;&emsp;&emsp;The next 6 bits represent the target square, resulting in a total of 9 bits
-
-&emsp;&emsp;&emsp;En passant is treated as a regular capture
-
-&emsp;&emsp;&emsp;`010 1 011 100` is the binary representation of `exd5`
-
-&emsp;&emsp;If the 3rd bit is `1`, that means the move is a promotion
-
-&emsp;&emsp;&emsp;The next 3 bits stand for the origin file, and the 2 after that represent which of the 3 squares seen by the pawn the promotion happens on. This is included regardless of whether disambiguation is needed or not.
-
-&emsp;&emsp;&emsp;`11` means the promotion happens on the same file. `01` means it's on the file to the right, and `10` means it's on the file to the left
-
-&emsp;&emsp;&emsp;Pawns can promote to 4 pieces, and the next 2 bits represent the piece, in the order of queen, knight, rook, bishop, for a total number of 10 bits.
-
-&emsp;&emsp;&emsp;`011 110 10 00` is the binary representation of `gxf8=Q`
-
-If the first bit is `1`, it means the move is a piece move
-
-&emsp;The next 2 bits represent the disambiguation and the 3 after that represent the piece being moved,
-
-&emsp;&emsp;`00`= no disambiguation, `01`= file disambiguation, `10`= rank disambiguation, `11`= double disambiguation
-
-&emsp;&emsp;`000`= pawn, `001`= knight, `010`= bishop, `011`= rook, `100`= queen, `101`= king
-
-&emsp;&emsp;If the move is double disambiguated, the piece can be omitted
-
-&emsp;&emsp;After those, 6 bits are added for the target square
-
-&emsp;&emsp;The total number of bytes is 12 for non-disambiguated moves and 15 for disambiguated moves
-&emsp;&emsp;`1 00 001 110 110` is the binary representation of Ne5
-&emsp;&emsp;`1 11 101 010 110 110` is the binary representation of Nf3e5
-
-
+## Handling metadata
