@@ -121,8 +121,7 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - Used by Lichess
   - 2 bytes
 - `10` ECO code
-  - `01` expets a null-terminated string
-  - `02` expects 2 bytes
+  - expects 2 bytes
     - 1 for the letter
     - 1 for the number
 - `11` Opening
@@ -161,6 +160,7 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - 2 bytes
 - `FF` Begin game
   - No longer looks for tag pairs, instead starts parsing the next byte as a game
+
 
 
 
