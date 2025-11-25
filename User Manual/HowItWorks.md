@@ -87,8 +87,8 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
 - `06` Black
   - null terminated string
 - `07` Result
-  - `02` white won 1-0
-  - `01` black won 0-1
+  - `01` white won 1-0
+  - `02` black won 0-1
   - `03` draw 1/2-1/2
 - `08` Date
   - Used by chess.com
@@ -161,5 +161,6 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - 2 bytes
 - `FF` Begin game
   - No longer looks for tag pairs, instead starts parsing the next byte as a game
+
 
 
