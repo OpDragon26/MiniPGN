@@ -85,7 +85,7 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
 - `05` White
   - null terminated string
 - `06` Black
-  - Followed by a null terminated string for name, then one for the value
+  - null terminated string
 - `07` Result
   - `02` white won 1-0
   - `01` black won 0-1
@@ -161,4 +161,5 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - 2 bytes
 - `FF` Begin game
   - No longer looks for tag pairs, instead starts parsing the next byte as a game
+
 
