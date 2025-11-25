@@ -10,6 +10,9 @@ public abstract class Encoder(Version version)
 
 public class EncoderProfile(Type type, Metadata metadataHandling)
 {
+    public readonly Type type = type;
+    public readonly Metadata metadataHandling = metadataHandling;
+    
     public string[] file = [];
 
     public string FileMetadata()

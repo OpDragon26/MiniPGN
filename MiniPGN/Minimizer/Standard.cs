@@ -9,6 +9,15 @@ public class Standard(Version version) : Encoder(version)
         ByteList.AddString("MPGN");
         ByteList.AddString(Version.ToString());
         ByteList.AddString(profile.FileMetadata());
+
+        foreach (string line in profile.file)
+        {
+            if (line.StartsWith('['))
+            {
+                if (profile.metadataHandling == Metadata.Include)
+                    ByteList.AddRange(TagPairParser.Parse(line));
+            }
+        }
         
         return ByteList.ToArray();
     }
