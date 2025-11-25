@@ -1,3 +1,4 @@
 ﻿using MiniPGN.Minimizer;
+using Type = MiniPGN.Minimizer.Type;
 
-EncoderProfile Profile = FileReader.GetProfile(args);
+Console.WriteLine(Encoder.Active.Encode(new(Type.Standard, Metadata.Include)));

@@ -1,8 +1,21 @@
 namespace MiniPGN.Minimizer;
 
-public static class Encoder
+public abstract class Encoder(Version version)
 {
-    public static Version Version = new(0,1);
+    public readonly Version Version = version;
+
+    public static Encoder Active = new Standard(new Version(0,1));
+    public abstract byte[] Encode(EncoderProfile profile, string fileName = "Result.mpgn");
+}
+
+public class EncoderProfile(Type type, Metadata metadataHandling)
+{
+    public string[] file = [];
+
+    public string FileMetadata()
+    {
+        return $"{type.ToString()[0]}{metadataHandling.ToString()[0]}";
+    }
 }
 
 public readonly struct Version(int major, int minor)
@@ -16,7 +29,8 @@ public readonly struct Version(int major, int minor)
 public enum Type
 {
     Fast,
-    Overoptimized
+    Standard,
+    Overoptimized,
 }
 
 public enum Metadata
