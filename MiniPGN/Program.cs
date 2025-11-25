@@ -1,3 +1,3 @@
 ﻿using MiniPGN.Minimizer;
 
-//EncoderProfile Profile = FileReader.GetProfile(args);
+EncoderProfile Profile = FileReader.GetProfile(args);
