@@ -7,6 +7,16 @@ Next is the version of the program used, for example `76 30 31 2E 30 30` for "v0
 Followed by details about how the PGNs were encoded. This includes information about what the program is expecting to decode, so that it can act accordingly. For example, whether any metadata, like the names of players or the time control, is stored with the games, or is it simply a list of games.
 
 The length of this portion may change version to version, currently it's just two bytes, for example `53 49` "SI" for Standard encoding and Include metadata
+
+File metadata
+
+ - `S` - Standard
+ - `F` - Fast
+ - `O` - Over-optimized
+
+ - `I` - Include metadata
+ - `E` - Exclude metadata
+
 ## Move encoding
 ### Standard/default:
 If the first (most significant) bit of the move is `0`, that means the move is a non-promoting pawn move
@@ -151,3 +161,4 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - 2 bytes
 - `FF` Begin game
   - No longer looks for tag pairs, instead starts parsing the next byte as a game
+
