@@ -8,6 +8,7 @@ byte[] byteFile = Encoder.Active.Encode(new(Type.Standard, Metadata.Include)
     [
         "[Event \"Rated Blitz game\"]",
         "[Site \"https://lichess.org/j1dkb5dw\"]",
+        "[Round \"?\"]",
         "[White \"H___N\"]",
         "[Black \"TheWeebles\"]",
         "[Result \"0-1\"]",

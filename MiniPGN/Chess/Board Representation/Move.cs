@@ -17,5 +17,7 @@ public enum Flag : byte
     WhiteShortCastle,
     WhiteLongCastle,
     BlackShortCastle,
-    BlackLongCastle
+    BlackLongCastle,
+    WhiteDoubleMove,
+    BlackDoubleMove,
 }

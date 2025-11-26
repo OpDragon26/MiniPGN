@@ -2,15 +2,27 @@ namespace MiniPGN.Minimizer;
 
 public static class ThrowHelper
 {
-    public static void StandardArgumentException()
-    {
-        throw new ArgumentException("Incorrect arguments. Correct use: 'mpgn -<encode/decode/v> <path> (the following only apply when encoding) -<fast/optimized> -<include/exclude> (metadata)'");
-    }
+
 }
 
-public class ArgumentParsingException : Exception
+// never thrown, only inherited by other exceptions
+public class MiniPGNException : Exception
 {
-    public ArgumentParsingException() { }
-    public ArgumentParsingException(string message) : base(message) { }
-    public ArgumentParsingException(string message, Exception inner) : base(message, inner) { }
+    protected MiniPGNException() { }
+    protected MiniPGNException(string message) : base(message) { }
+    protected MiniPGNException(string message, Exception inner) : base(message, inner) { }
+}
+
+public class TagNotRecognizedException : MiniPGNException
+{
+    public TagNotRecognizedException() { }
+    public TagNotRecognizedException(string message) : base(message) { }
+    public TagNotRecognizedException(string message, Exception inner) : base(message, inner) { }
+}
+
+public class NotationParsingException : MiniPGNException
+{
+    public NotationParsingException() { }
+    public NotationParsingException(string message) : base(message) { }
+    public NotationParsingException(string message, Exception inner) : base(message, inner) { }
 }

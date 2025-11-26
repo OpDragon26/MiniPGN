@@ -48,6 +48,15 @@ If the first bit is `1`
       - The 3rd byte stores the target square
       - The byte representation of Nb1c3 would be `111 11 010  001 000 00  010 010 00`
 
+Piece codes
+
+- `010` knight
+- `011` bishop
+- `100` rook
+- `101` queen
+- `110` king
+
+      
 Bytes that cannot normally appear can be considered control characters
 
 `11100111` Draw
@@ -55,6 +64,8 @@ Bytes that cannot normally appear can be considered control characters
 `11110111` White won
 
 `11101111` Black won
+
+`11111111` Unspecified
 
 ## Handling game metadata
 

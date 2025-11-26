@@ -1,4 +1,5 @@
-namespace MiniPGN.Minimizer;
+namespace MiniPGN.Parsing;
+using Minimizer;
 
 public static class TagPairParser
 {
@@ -19,6 +20,11 @@ public static class TagPairParser
             case "Site":
                 bytes.Add(0x03);
                 bytes.AddRange(ParseSitePair(pair[1]));
+                break;
+            
+            case "Round":
+                bytes.Add(0x04);
+                bytes.AddRange(ParseRound(pair[1]));
                 break;
             
             case "White":
@@ -51,6 +57,11 @@ public static class TagPairParser
                 bytes.AddRange(ParseTime(pair[1]));
                 break;
             
+            case "TimeControl":
+                bytes.Add(0x0B);
+                bytes.AddRange(ParseTimeControl(pair[1]));
+                break;
+            
             case "WhiteElo":
                 bytes.Add(0x0C);
                 bytes.AddRange(ParseRating(pair[1]));
@@ -81,14 +92,46 @@ public static class TagPairParser
                 bytes.AddRange(pair[1].ToByteArray(true));
                 break;
             
-            case "TimeControl":
-                bytes.Add(0x0B);
-                bytes.AddRange(ParseTimeControl(pair[1]));
-                break;
-            
             case "Termination":
                 bytes.Add(0x12);
                 bytes.AddRange(ParseTermination(pair[1]));
+                break;
+            
+            case "EndTime":
+                bytes.Add(0x13);
+                string[] time = pair[1].Split(' ');
+                bytes.AddRange(ParseTime(time[0]));
+                bytes.Add(ParseTimeZone(time[1]));
+                break;
+            
+            case "Annotator":
+                bytes.Add(0x14);
+                bytes.AddRange(pair[1].ToByteArray(true));
+                break;
+            
+            case "PlyCount":
+                bytes.Add(0x15);
+                bytes.AddRange(ushort.Parse(pair[1]).ToByteArray());
+                break;
+            
+            case "Time":
+                bytes.Add(0x16);
+                bytes.AddRange(ParseTime(pair[1]));
+                break;
+            
+            case "Mode":
+                bytes.Add(0x17);
+                bytes.AddRange(ParseMode(pair[1]));
+                break;
+            
+            case "FEN":
+                bytes.Add(0x18);
+                bytes.AddRange(pair[1].ToByteArray(true));
+                break;
+            
+            case "SetUp":
+                bytes.Add(0x19);
+                bytes.AddRange(ushort.Parse(pair[1]).ToByteArray());
                 break;
             
             default:
@@ -101,6 +144,44 @@ public static class TagPairParser
         return bytes;
     }
 
+    private static IEnumerable<byte> ParseMode(string tag)
+    {
+        if (tag.Equals("OTB"))
+            yield return 0x02;
+        if (tag.Equals("ICS"))
+            yield return 0x03;
+        else
+        {
+            yield return 0x01;
+            foreach (byte b in tag.ToByteArray(true))
+                yield return b;
+        }
+    }
+
+    private static byte ParseTimeZone(string tag)
+    {
+        if (byte.TryParse(tag.Split('0')[1], out byte plusTime))
+            return plusTime;
+        throw new TagNotRecognizedException($"Unable to parse time zone {tag}");
+    }
+    
+    private static IEnumerable<byte> ParseRound(string tag)
+    {
+        if (tag.Equals("?"))
+        {
+            yield return 0b1000_0000;
+            yield return 0;
+        }
+        else if (ushort.TryParse(tag, out ushort rounds))
+        {
+            byte[] bytes = rounds.ToByteArray();
+            yield return bytes[0];
+            yield return bytes[1];
+        }
+
+        throw new TagNotRecognizedException($"Could not parse round string {tag}");
+    }
+    
     private static readonly Dictionary<char, byte> ECOLetter = new()
     {
         {'A', 0},
@@ -216,7 +297,7 @@ public static class TagPairParser
             "1-0" => 0x01, // white won
             "0-1" => 0x02, // black wom
             "1/2-1/2" => 0x03, // draw
-            _ => throw new Exception($"Result not recognized: {tag}")
+            _ => throw new TagNotRecognizedException($"Result not recognized: {tag}")
         };
     }
     
@@ -258,7 +339,7 @@ public static class TagPairParser
                 "Blitz" => 0x02,
                 "Classical" => 0x03,
                 "Correspondence" => 0x04,
-                _ => throw new Exception($"Could not recognize Lichess time control: {timeControl}")
+                _ => throw new TagNotRecognizedException($"Could not recognize Lichess time control: {timeControl}")
             };
             
             yield break;

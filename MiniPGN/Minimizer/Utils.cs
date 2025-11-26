@@ -4,18 +4,6 @@ namespace MiniPGN.Minimizer;
 
 public static class Utils
 {
-    public static void AddString(this List<byte> byteList, string str, bool log = false)
-    {
-        foreach (char c in str)
-        {
-            IEnumerable<byte> bytes = Encoding.UTF8.GetBytes(c.ToString());
-            if (log)
-                Console.WriteLine($"'{c}': {string.Join(' ', ToString(bytes))}");
-            
-            byteList.AddRange(bytes);
-        }
-    }
-    
     public static string ToString(IEnumerable<byte> bytes)
     {
         return string.Join(' ' , bytes.Select(b => Convert.ToString(b, 16)
@@ -35,5 +23,10 @@ public static class Utils
         if (BitConverter.IsLittleEndian)
             Array.Reverse(bytes);
         return bytes;
+    }
+
+    public static byte[] ToByteArray(this ushort value)
+    {
+        return [(byte)(value >> 8), (byte)value];
     }
 }

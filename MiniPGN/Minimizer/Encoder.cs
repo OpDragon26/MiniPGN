@@ -4,7 +4,7 @@ public abstract class Encoder(Version version)
 {
     public readonly Version Version = version;
 
-    public static Encoder Active = new Standard(new Version(0,1));
+    public static Encoder Active = new Standard.Standard(new Version(0,1));
     public abstract byte[] Encode(EncoderProfile profile, string fileName = "Result.mpgn");
 }
 

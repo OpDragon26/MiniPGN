@@ -8,9 +8,11 @@ using static Parsing.Display;
 
 public class Board(PieceBoard board, Bitboard bitboards, int turn)
 {
-    private int turn = turn;
+    public int turn = turn;
     private PieceBoard board = board;
     public Bitboard bitboards = bitboards;
+    
+    public int enPassant = -1;
     
     public Board(string FEN) : this(ParsePieceBoard(FEN.Split(' ')[0]), new(), (FEN.Split(' ')[1][0] == 'w' ? 0 : 1))
     {
@@ -35,6 +37,7 @@ public class Board(PieceBoard board, Bitboard bitboards, int turn)
         if (promotion)
             return;
 
+        enPassant = -1;
         if ((byte)move.Flag > 1)
             HandleSpecialMove(move);
 
@@ -88,6 +91,16 @@ public class Board(PieceBoard board, Bitboard bitboards, int turn)
                 board[move.Target + 8] = Empty;
                 bitboards[WPawn, move.Target + 8] = false;
             } break;
+
+            case Flag.WhiteDoubleMove:
+            {
+                enPassant = move.Target - 8;
+            } break;
+            
+            case Flag.BlackDoubleMove:
+            {
+                enPassant = move.Target + 8;
+            } break;
         }
     }
 
@@ -107,10 +120,21 @@ public class Board(PieceBoard board, Bitboard bitboards, int turn)
         get => board[GetIndex(file, rank)];
         set => board[GetIndex(file, rank)] = value;
     }
+    
+    public byte this[(int file, int rank) square]
+    {
+        get => board[GetIndex(square.file, square.rank)];
+        set => board[GetIndex(square.file, square.rank)] = value;
+    }
 
     public Board Clone()
     {
         return new Board(board, bitboards, turn);
+    }
+
+    public static Board NewStartingBoard()
+    {
+        return new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
 }
 
