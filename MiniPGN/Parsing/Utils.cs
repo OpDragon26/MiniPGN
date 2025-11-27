@@ -7,11 +7,16 @@ public static class Utils
     
     public static (int file, int rank) ParseSquare(string square)
     {
-        return (Array.IndexOf(Files, square[0]), (byte)square[1] - 30);
+        return (Array.IndexOf(Files, square[0]), square[1].ToNum() - 1);
     }
 
     public static byte GetSquareByte((int file, int rank) square)
     {
-        return (byte)(square.file | (square.rank << 3));
+        return (byte)(square.rank | (square.file << 3));
+    }
+
+    private static byte ToNum(this char c)
+    {
+        return (byte)(c - '0');
     }
 }

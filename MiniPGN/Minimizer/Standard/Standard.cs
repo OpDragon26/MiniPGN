@@ -3,7 +3,7 @@ using Parsing;
 
 public class Standard(Version version) : Encoder(version)
 {
-    public static Parser parser = new();
+    private static readonly Parser parser = new();
     
     public override byte[] Encode(EncoderProfile profile, string fileName = "Result.mpgn")
     {
@@ -29,10 +29,5 @@ public class Standard(Version version) : Encoder(version)
         }
         
         return ByteList.ToArray();
-    }
-
-    private void ParseGame(string line)
-    {
-        
     }
 }

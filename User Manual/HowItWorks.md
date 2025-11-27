@@ -34,19 +34,19 @@ If the first bit is `1`
 - If the second bit is `1`
   - And the 3rd bit is `0`, that means the move is a promotion, and the next 3 bits represent the piece being promoted to
     - In the second byte, since the files are always given, 3 bits represent the source file and 3 bits represent the target file. This is necessary for disambiguation
-    - The byte representation of exd8=Q would be `110 101 00  100 011 00`
+    - The byte representation of exd8=Q would be `110 101 00  00 100 011`
 
   - If the 3rd bit is `1` that means the move is a piece move, if multiple other pieces could move to the target square
     - The next 2 bits represent disambiguation
     - `00` means the move was not disambiguated
       - The next 3 bits represent the piece being moved
       - The 6 bits stored in the second byte represent the target square
-      - The byte representation of Nc3 would be `111 00 010  010 010 00`
+      - The byte representation of Nc3 would be `111 00 010  00 010 010`
     - `10` file, `01` rank, `11` double
       - The next 3 bits represent the piece moved to make it easier to convert back to algebraic notation
       - The 2nd byte stores the source square
       - The 3rd byte stores the target square
-      - The byte representation of Nb1c3 would be `111 11 010  001 000 00  010 010 00`
+      - The byte representation of Nb1c3 would be `111 11 010  00 001 000  00 010 010`
 
 Piece codes
 

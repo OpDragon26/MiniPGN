@@ -24,20 +24,46 @@ public class Parser : GameParser
         {
             case 2:
                 // pawn move: e4
-                (int file, int rank) target = Parsing.Utils.ParseSquare(alg);
-                (int file, int rank) source = board.turn == 0 ? (target.file, target.rank - 1) : (target.file, target.rank + 1);
-                
-                bool doubleMove = Pieces.TypeOf(board[source]) != Pieces.WPawn;
-                if (doubleMove)
-                    source = board.turn == 0 ? (target.file, target.rank - 2) : (target.file, target.rank + 2);
-                
-                return new(
-                    [(byte)(Parsing.Utils.GetSquareByte(target) >> 2)],
-                    new(BoardUtils.GetIndex(source), BoardUtils.GetIndex(target), flag: doubleMove ? (board.turn == 0 ? Flag.WhiteDoubleMove : Flag.BlackDoubleMove) : Flag.None)
-                );
+                return ParseSinglePawnMove(alg, board);
                 break;
+            
+            case 3:
+                // non-disambiguated piece move: Nf3
+                
+            break;
         }
         
         throw new NotationParsingException("Unable to parse notation " + alg);
+    }
+
+    private static MoveResult ParseRegularPieceMove(string move, Board board)
+    {
+        throw new NotImplementedException();
+    }
+
+    private static MoveResult ParseSinglePawnMove(string move, Board board)
+    {
+        (int file, int rank) target = Parsing.Utils.ParseSquare(move);
+        (int file, int rank) source = OffsetSquare(target, yOffset: board.turn == 0 ? -1 : 1);
+                
+        bool doubleMove = Pieces.TypeOf(board[source]) != Pieces.WPawn;
+        if (doubleMove)
+            source = OffsetSquare(target, yOffset: board.turn == 0 ? -2 : 2);
+
+        int src = BoardUtils.GetIndex(source);
+        int trg = BoardUtils.GetIndex(target);
+        Flag flag = doubleMove ? (board.turn == 0 ? Flag.WhiteDoubleMove : Flag.BlackDoubleMove) : Flag.None;
+
+        byte moveByte = Parsing.Utils.GetSquareByte(target);
+        
+        return new(
+            [moveByte],
+            new(src, trg, flag: flag)
+        );
+    }
+
+    private static (int file, int rank) OffsetSquare((int file, int rank) square, int xOffset = 0, int yOffset = 0)
+    {
+        return (square.file + xOffset, square.rank + yOffset);
     }
 }

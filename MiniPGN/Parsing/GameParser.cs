@@ -3,7 +3,7 @@ using Chess.Board_Representation;
 
 public abstract class GameParser
 {
-    public virtual IEnumerable<byte> ParseGame(string game, Board board)
+    protected virtual IEnumerable<byte> ParseGame(string game, Board board)
     {
         board = board.Clone();
         string[] moves = game.Split(' ');
@@ -19,6 +19,8 @@ public abstract class GameParser
             foreach (byte b in result.Bytes)
                 yield return b;
         }
+
+        Console.WriteLine(board);
     }
     
     public virtual IEnumerable<byte> ParseGame(string game)

@@ -178,8 +178,8 @@ public static class TagPairParser
             yield return bytes[0];
             yield return bytes[1];
         }
-
-        throw new TagNotRecognizedException($"Could not parse round string {tag}");
+        else
+            throw new TagNotRecognizedException($"Could not parse round string {tag}");
     }
     
     private static readonly Dictionary<char, byte> ECOLetter = new()
