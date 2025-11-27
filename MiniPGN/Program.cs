@@ -1,15 +1,9 @@
 ﻿using MiniPGN.Chess;
-using MiniPGN.Chess.Bitboards;
-using MiniPGN.Chess.Parsing;
 using MiniPGN.Minimizer;
 using Type = MiniPGN.Minimizer.Type;
 using Utils = MiniPGN.Minimizer.Utils;
 
 Init.Start();
-
-Console.WriteLine(Display.GetBitboardString(Masks.RookMasks[0]));
-
-return;
 
 byte[] byteFile = Encoder.Active.Encode(new(Type.Standard, Metadata.Include)
 {
