@@ -1,5 +1,4 @@
 namespace MiniPGN.Parsing;
-using CU = Chess.Board_Representation.Utils;
 
 public static class Utils
 {

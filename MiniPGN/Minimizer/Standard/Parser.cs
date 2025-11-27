@@ -1,7 +1,7 @@
 namespace MiniPGN.Minimizer.Standard;
 using Chess.Board_Representation;
 using Parsing;
-using BoardUtils = Chess.Board_Representation.Utils;
+using BoardUtils = Chess.Utils;
 
 public class Parser : GameParser
 {
@@ -25,7 +25,6 @@ public class Parser : GameParser
             case 2:
                 // pawn move: e4
                 return ParseSinglePawnMove(alg, board);
-                break;
             
             case 3:
                 // non-disambiguated piece move: Nf3
@@ -43,7 +42,7 @@ public class Parser : GameParser
 
     private static MoveResult ParseSinglePawnMove(string move, Board board)
     {
-        (int file, int rank) target = Parsing.Utils.ParseSquare(move);
+        (int file, int rank) target = Utils.ParseSquare(move);
         (int file, int rank) source = OffsetSquare(target, yOffset: board.turn == 0 ? -1 : 1);
                 
         bool doubleMove = Pieces.TypeOf(board[source]) != Pieces.WPawn;
@@ -54,7 +53,7 @@ public class Parser : GameParser
         int trg = BoardUtils.GetIndex(target);
         Flag flag = doubleMove ? (board.turn == 0 ? Flag.WhiteDoubleMove : Flag.BlackDoubleMove) : Flag.None;
 
-        byte moveByte = Parsing.Utils.GetSquareByte(target);
+        byte moveByte = Utils.GetSquareByte(target);
         
         return new(
             [moveByte],
