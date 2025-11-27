@@ -2,6 +2,12 @@ namespace MiniPGN.Chess;
 
 public static class Utils
 {
+    private static readonly Random Random = new();
+    public static ulong RandomUlong()
+    {
+        return (ulong)Random.Next() * (ulong)Random.Next();
+    }
+    
     public static int GetIndex(int file, int rank)
     {
         return rank * 8 + file;
@@ -52,8 +58,8 @@ public static class Utils
         return ValidSquare(square.file, square.rank);
     }
 
-    public static (int file, int rank) Offset(this (int file, int rank) square, (int file, int rank) other)
+    public static (int file, int rank) OffsetBy(this (int file, int rank) square, (int file, int rank) other, int multiplier = 1)
     {
-        return (square.file + other.file, square.rank + other.rank);
+        return (square.file + other.file * multiplier, square.rank + other.rank * multiplier);
     }
 }

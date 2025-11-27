@@ -26,7 +26,7 @@ public static class Masks
         }
     }
 
-    private static readonly (int file, int rank)[] KnightOffsets = [
+    private static readonly Pattern KnightPattern = new([
         (1, 2), 
         (2, 1),
         (-1, 2), 
@@ -35,7 +35,14 @@ public static class Masks
         (2, -1),
         (-1, -2), 
         (-2, -1),
-    ];
+    ], false);
+
+    public static readonly Pattern RookPattern = new([
+        (1, 0),
+        (0, 1),
+        (-1, 0),
+        (0, -1),
+    ], true);
 
     private static ulong GetKingMask((int file, int rank) square)
     {
@@ -61,9 +68,9 @@ public static class Masks
     {
         ulong mask = 0;
         
-        foreach ((int file, int rank) offset in KnightOffsets)
+        foreach ((int file, int rank) offset in KnightPattern.Offsets)
         {
-            (int file, int rank) target = square.Offset(offset);
+            (int file, int rank) target = square.OffsetBy(offset);
 
             if (target.ValidSquare())
                 mask |= target.Bitboard();
@@ -75,5 +82,11 @@ public static class Masks
     private static ulong GetRookMask((int file, int rank) square)
     {
         return Utils.GetFile(square.file) ^ Utils.GetRank(square.rank);
+    }
+
+    public class Pattern((int file, int rank)[] offsets, bool sliding)
+    {
+        public (int file, int rank)[] Offsets = offsets;
+        public bool Sliding = sliding;
     }
 }

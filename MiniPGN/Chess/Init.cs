@@ -11,5 +11,6 @@ public static class Init
         complete = true;
         
         Bitboards.Masks.Init();
+        Bitboards.MagicLookup.Init();
     }
 }

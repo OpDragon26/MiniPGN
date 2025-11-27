@@ -1,4 +1,7 @@
 ﻿using MiniPGN.Chess;
+using MiniPGN.Chess.Bitboards;
+using MiniPGN.Chess.Board_Representation;
+using MiniPGN.Chess.Parsing;
 using MiniPGN.Minimizer;
 using Type = MiniPGN.Minimizer.Type;
 using Utils = MiniPGN.Minimizer.Utils;
