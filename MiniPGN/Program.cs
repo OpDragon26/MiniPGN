@@ -28,7 +28,7 @@ byte[] byteFile = Encoder.Active.Encode(new(Type.Standard, Metadata.Include)
         "[Opening \"Vienna Game: Max Lange Defense\"]",
         "[TimeControl \"480+0\"]",
         "[Termination \"Normal\"]",
-        "1. e4 e6 2. Nf3 Ba3 3. Nxa3 d5 4. exd5 e5 5. d6 Qf6 6. d7+ Kf8 7. d8=Q+"
+        "1. e4 e5 2. Nc3 a5 3. Nge2"
     ]
 });
 

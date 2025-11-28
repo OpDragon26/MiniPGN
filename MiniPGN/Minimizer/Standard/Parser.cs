@@ -1,6 +1,5 @@
 using MiniPGN.Chess;
 using MiniPGN.Chess.Bitboards;
-using MiniPGN.Chess.Parsing;
 
 namespace MiniPGN.Minimizer.Standard;
 using Chess.Board_Representation;
@@ -14,36 +13,66 @@ public class Parser : GameParser
     private static readonly MoveResult WhiteLongCastle = new([0b111_00_110, 0b010_000_00], new( 4,  6, flag: Flag.WhiteLongCastle));
     private static readonly MoveResult BlackLongCastle = new([0b111_00_110, 0b010_111_00], new(60, 62, flag: Flag.BlackLongCastle));
     
-    protected override MoveResult ParseMove(string alg, Board board)
+    protected override MoveResult ParseMove(string notation, Board board)
     {
-        if (alg.EndsWith('#') || alg.EndsWith('+'))
-            alg = alg[..^1];
+        if (notation.EndsWith('#') || notation.EndsWith('+'))
+            return ParseMove(notation[..^1], board);
 
-        if (alg.Equals("O-O"))
+        if (notation.Equals("O-O"))
             return board.turn == 0 ? WhiteShortCastle : BlackShortCastle;
-        if (alg.Equals("O-O-O"))
+        if (notation.Equals("O-O-O"))
             return board.turn == 0 ? WhiteLongCastle : BlackLongCastle;
         
-        switch (alg.Length)
+        switch (notation.Length)
         {
             case 2:
                 // pawn move: e4
-                return ParseSinglePawnMove(alg, board);
+                return ParseSinglePawnMove(notation, board);
             case 3:
                 // non-disambiguated piece move: Nf3
-                return ParseRegularPieceMove(alg, board);
+                return ParseRegularPieceMove(notation, board);
             case 4:
                 // capture
-                if (alg[1] == 'x')
-                    return ParseRegularCapture(alg, board);
+                if (notation[1] == 'x')
+                    return ParseRegularCapture(notation, board);
                 // non-capture promotion
-                if (alg[2] == '=')
-                    return ParseRegularPromotion(alg, board);
+                if (notation[2] == '=')
+                    return ParseRegularPromotion(notation, board);
                 // single-disambiguated piece move
-                break;
+                return ParseSingleDisambiguatedPieceMove(notation, board);
         }
         
-        throw new NotationParsingException("Unable to parse notation " + alg);
+        throw new NotationParsingException("Unable to parse notation " + notation);
+    }
+
+    private static MoveResult ParseSingleDisambiguatedPieceMove(string move, Board board)
+    {
+        (int file, int rank) target = Utils.ParseSquare(move[2..]);
+        byte piece = Parse(move[0]);
+        
+        // file disambiguation
+        if (move[1].IsFile())
+        {
+            MovingPiece pieceData = FindMovingPiece(board, target, piece, Disambiguation.File, dNum: move[1].AsFile());
+            
+            int src = pieceData.Source.GetIndex();
+            int trg = target.GetIndex();
+
+            byte moveByte = (byte)(0b111_10_000 | piece);
+            
+            return new MoveResult([moveByte, pieceData.Source.ToByte(), target.ToByte()], new Move(src, trg));
+        }
+        else
+        {
+            MovingPiece pieceData = FindMovingPiece(board, target, piece, Disambiguation.Rank, move[1].ToNum());
+            
+            int src = pieceData.Source.GetIndex();
+            int trg = target.GetIndex();
+
+            byte moveByte = (byte)(0b111_01_000 | piece);
+            
+            return new MoveResult([moveByte, pieceData.Source.ToByte(), target.ToByte()], new Move(src, trg));
+        }
     }
 
     private static MoveResult ParseRegularPromotion(string move, Board board)
@@ -51,7 +80,7 @@ public class Parser : GameParser
         byte moveByte = 0b1100_0000;
         byte piece = Parse(move[3]);
         moveByte |= piece;
-        int file = Utils.GetFile(move[0]);
+        int file = move[0].AsFile();
         
         int trg = (file, board.turn == 0 ? 7 : 0).GetIndex();
         int src = (file, board.turn == 0 ? 6 : 1).GetIndex();
@@ -67,7 +96,7 @@ public class Parser : GameParser
         
         // pawn capture
         (int File, int rank) target = Utils.ParseSquare(move[2..]);
-        (int File, int rank) source = (Utils.GetFile(move[0]), target.rank + board.turn * 2 - 1);
+        (int File, int rank) source = (move[0].AsFile(), target.rank + board.turn * 2 - 1);
 
         int trg = target.GetIndex();
         int src = source.GetIndex();
@@ -78,7 +107,7 @@ public class Parser : GameParser
 
         int captureFlag = target.File > source.File ? 0 : 0b0100_0000;
         
-        return new MoveResult([(byte)(captureFlag | Utils.GetSquareByte(target))], new Move(src, trg, flag: flag));
+        return new MoveResult([(byte)(captureFlag | target.ToByte())], new Move(src, trg, flag: flag));
     }
     
     private static MoveResult ParseRegularPieceMove(string move, Board board)
@@ -91,8 +120,8 @@ public class Parser : GameParser
         Move foundMove = new Move(pieceData.Source.GetIndex(), target.GetIndex());
 
         IEnumerable<byte> bytes = pieceData.FreePiece 
-            ? [(byte)(0b10000000 | Utils.GetSquareByte(target))] 
-            : [(byte)(0b11100000 | piece), Utils.GetSquareByte(target)];
+            ? [(byte)(0b1000_0000 | target.ToByte())] 
+            : [(byte)(0b1110_0000 | piece), target.ToByte()];
 
         return new MoveResult(bytes, foundMove);
     }
@@ -108,13 +137,18 @@ public class Parser : GameParser
 
         ulong specifiedPieces = FindMovingPieceBitboard(board, target, piece);
 
-        if (d == Disambiguation.None)
-        {
-            if (ulong.PopCount(specifiedPieces) == 1)
-                return new MovingPiece(Chess.Bitboards.Utils.FindFileRankFromBitboard(specifiedPieces), false);
-        }
+        if (d == Disambiguation.File)
+            specifiedPieces &= Chess.Bitboards.Utils.GetFile(dNum);
+        else if (d == Disambiguation.Rank)
+            specifiedPieces &= Chess.Bitboards.Utils.GetRank(dNum);
+        
+        
+        if (ulong.PopCount(specifiedPieces) == 1)
+            return new MovingPiece(Chess.Bitboards.Utils.FindFileRankFromBitboard(specifiedPieces), false);
 
-        throw new NotImplementedException();
+        if (ulong.PopCount(specifiedPieces) == 0)
+            throw new NotationParsingException("Could not find moving piece");
+        throw new NotationParsingException("Insufficient disambiguation");
     }
 
     private struct MovingPiece((int file, int rank) source, bool freePiece)
@@ -162,7 +196,7 @@ public class Parser : GameParser
         (int file, int rank) target = Utils.ParseSquare(move);
         (int file, int rank) source = OffsetSquare(target, yOffset: board.turn == 0 ? -1 : 1);
                 
-        bool doubleMove = Pieces.TypeOf(board[source]) != Pieces.WPawn;
+        bool doubleMove = TypeOf(board[source]) != WPawn;
         if (doubleMove)
             source = OffsetSquare(target, yOffset: board.turn == 0 ? -2 : 2);
 
@@ -170,12 +204,9 @@ public class Parser : GameParser
         int trg = target.GetIndex();
         Flag flag = doubleMove ? (board.turn == 0 ? Flag.WhiteDoubleMove : Flag.BlackDoubleMove) : Flag.None;
 
-        byte moveByte = Utils.GetSquareByte(target);
+        byte moveByte = target.ToByte();
         
-        return new(
-            [moveByte],
-            new(src, trg, flag: flag)
-        );
+        return new([moveByte], new(src, trg, flag: flag));
     }
 
     private static (int file, int rank) OffsetSquare((int file, int rank) square, int xOffset = 0, int yOffset = 0)

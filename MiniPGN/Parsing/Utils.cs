@@ -6,21 +6,26 @@ public static class Utils
     
     public static (int file, int rank) ParseSquare(string square)
     {
-        return (GetFile(square[0]), square[1].ToNum() - 1);
+        return (AsFile(square[0]), square[1].ToNum() - 1);
     }
 
-    public static byte GetSquareByte((int file, int rank) square)
+    public static byte ToByte(this (int file, int rank) square)
     {
         return (byte)(square.rank | (square.file << 3));
     }
 
-    private static byte ToNum(this char c)
+    public static byte ToNum(this char c)
     {
         return (byte)(c - '0');
     }
 
-    public static int GetFile(char f)
+    public static int AsFile(this char f)
     {
         return Array.IndexOf(Files, f);
+    }
+    
+    public static bool IsFile(this char f)
+    {
+        return Files.Contains(f);
     }
 }

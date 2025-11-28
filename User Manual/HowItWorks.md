@@ -39,7 +39,7 @@ If the first bit is `1`
   - If the 3rd bit is `1` that means the move is a piece move, if multiple other pieces could move to the target square
     - The next 2 bits represent disambiguation
     - `00` means the move was not disambiguated
-      - The next 3 bits represent the piece being moved
+      - The last 3 bits represent the piece being moved
       - The 6 bits stored in the second byte represent the target square
       - The byte representation of Nc3 would be `111 00 010  00 010 010`
     - `10` file, `01` rank, `11` double
