@@ -6,7 +6,7 @@ public static class Utils
     
     public static (int file, int rank) ParseSquare(string square)
     {
-        return (Array.IndexOf(Files, square[0]), square[1].ToNum() - 1);
+        return (GetFile(square[0]), square[1].ToNum() - 1);
     }
 
     public static byte GetSquareByte((int file, int rank) square)
@@ -17,5 +17,10 @@ public static class Utils
     private static byte ToNum(this char c)
     {
         return (byte)(c - '0');
+    }
+
+    public static int GetFile(char f)
+    {
+        return Array.IndexOf(Files, f);
     }
 }

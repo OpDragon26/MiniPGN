@@ -33,6 +33,11 @@ public static class Pieces
         return pieceDict[p];
     }
 
+    public static bool IsPiece(char p)
+    {
+        return pieceDict.ContainsKey(p);
+    }
+
     private static readonly Dictionary<char, byte> pieceDict = new()
     {
         { 'P' , WPawn },

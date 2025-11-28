@@ -1,5 +1,6 @@
 using MiniPGN.Chess;
 using MiniPGN.Chess.Bitboards;
+using MiniPGN.Chess.Parsing;
 
 namespace MiniPGN.Minimizer.Standard;
 using Chess.Board_Representation;
@@ -28,13 +29,56 @@ public class Parser : GameParser
             case 2:
                 // pawn move: e4
                 return ParseSinglePawnMove(alg, board);
-            
             case 3:
                 // non-disambiguated piece move: Nf3
                 return ParseRegularPieceMove(alg, board);
+            case 4:
+                // capture
+                if (alg[1] == 'x')
+                    return ParseRegularCapture(alg, board);
+                // non-capture promotion
+                if (alg[2] == '=')
+                    return ParseRegularPromotion(alg, board);
+                // single-disambiguated piece move
+                break;
         }
         
         throw new NotationParsingException("Unable to parse notation " + alg);
+    }
+
+    private static MoveResult ParseRegularPromotion(string move, Board board)
+    {
+        byte moveByte = 0b1100_0000;
+        byte piece = Parse(move[3]);
+        moveByte |= piece;
+        int file = Utils.GetFile(move[0]);
+        
+        int trg = (file, board.turn == 0 ? 7 : 0).GetIndex();
+        int src = (file, board.turn == 0 ? 6 : 1).GetIndex();
+        
+        return new MoveResult([moveByte, (byte)(file | (file << 3))], new Move(trg, src, piece, Flag.Promotion));
+    }
+    
+    private static MoveResult ParseRegularCapture(string move, Board board)
+    {
+        // piece capture
+        if (IsPiece(move[0]))
+            return ParseRegularPieceMove(move[0] + move[2..], board);
+        
+        // pawn capture
+        (int File, int rank) target = Utils.ParseSquare(move[2..]);
+        (int File, int rank) source = (Utils.GetFile(move[0]), target.rank + board.turn * 2 - 1);
+
+        int trg = target.GetIndex();
+        int src = source.GetIndex();
+
+        Flag flag = trg == board.enPassant 
+            ? (board.turn == 0 ? Flag.WhiteEnPassant : Flag.BlackEnPassant) 
+            : Flag.None;
+
+        int captureFlag = target.File > source.File ? 0 : 0b0100_0000;
+        
+        return new MoveResult([(byte)(captureFlag | Utils.GetSquareByte(target))], new Move(src, trg, flag: flag));
     }
     
     private static MoveResult ParseRegularPieceMove(string move, Board board)
@@ -47,8 +91,8 @@ public class Parser : GameParser
         Move foundMove = new Move(pieceData.Source.GetIndex(), target.GetIndex());
 
         IEnumerable<byte> bytes = pieceData.FreePiece 
-            ? [(byte)(0b10 | Utils.GetSquareByte(target))] 
-            : [(byte)(0b11100 | piece), Utils.GetSquareByte(target)];
+            ? [(byte)(0b10000000 | Utils.GetSquareByte(target))] 
+            : [(byte)(0b11100000 | piece), Utils.GetSquareByte(target)];
 
         return new MoveResult(bytes, foundMove);
     }

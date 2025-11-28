@@ -28,13 +28,13 @@ If the first (most significant) bit of the move is `0`, that means the move is a
 If the first bit is `1`
 - And the second is `0`, that means only one piece could move to the target square
   - The next 6 bits represent the target square for a total of 8 bits
-  - Making sure that such moves only take up one byte instead of 2 doesn't seem like it helps much, however this would nearly halve the size of endgames
+  - Making sure that such moves only take up one byte instead of 2 doesn't seem like it helps much, however this would nearly halve the size of some endgames
   - The byte representation of Qf7, if no other piece can move to the square, would be `10 101 110`
 
 - If the second bit is `1`
-  - And the 3rd bit is `0`, that means the move is a promotion, and the next 3 bits represent the piece being promoted to
+  - And the 3rd bit is `0`, that means the move is a promotion, and the last 3 bits represent the piece being promoted to
     - In the second byte, since the files are always given, 3 bits represent the source file and 3 bits represent the target file. This is necessary for disambiguation
-    - The byte representation of exd8=Q would be `110 101 00  00 100 011`
+    - The byte representation of exd8=Q would be `110 00 101  00 100 011`
 
   - If the 3rd bit is `1` that means the move is a piece move, if multiple other pieces could move to the target square
     - The next 2 bits represent disambiguation
