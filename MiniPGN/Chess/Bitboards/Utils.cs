@@ -49,8 +49,16 @@ public static class Utils
             }
         }
         
-        
-        
         return moves;
+    }
+
+    public static (int file, int rank) FindFileRankFromBitboard(ulong bitboard)
+    {
+        for (int file = 0; file < 8; file++)
+        for (int rank = 0; rank < 8; rank++)
+            if ((file, rank).Bitboard() == bitboard)
+                return (file, rank);
+
+        return (-1, -1);
     }
 }

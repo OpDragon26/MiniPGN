@@ -136,6 +136,38 @@ public class Board(PieceBoard board, Bitboard bitboards, int turn)
     {
         return new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
+
+    public ulong AllBitboards()
+    {
+        return bitboards[WPawn] | bitboards[BPawn] | bitboards[WKnight] | bitboards[BKnight] | bitboards[WBishop] |
+               bitboards[BBishop] | bitboards[WRook] | bitboards[BRook] | bitboards[WQueen] | bitboards[BQueen] |
+               bitboards[WKing] | bitboards[BKing];
+    }
+
+    public ulong AllBitboards(int side)
+    {
+        return side == 0
+            ? bitboards[WPawn] | bitboards[WKnight] | bitboards[WBishop] | bitboards[WRook] | bitboards[WQueen] | bitboards[WKing]
+            : bitboards[BPawn] | bitboards[BKnight] | bitboards[BBishop] | bitboards[BRook] | bitboards[BQueen] | bitboards[BKing];
+    }
+    
+    public ulong AllPieces()
+    {
+        return bitboards[WKnight] | bitboards[BKnight] | bitboards[WBishop] | bitboards[BBishop] | bitboards[WRook] |
+               bitboards[BRook] | bitboards[WQueen] | bitboards[BQueen] | bitboards[WKing] | bitboards[BKing];
+    }
+
+    public ulong AllPieces(int side)
+    {
+        return side == 0
+            ? bitboards[WKnight] | bitboards[WBishop] | bitboards[WRook] | bitboards[WQueen] | bitboards[WKing]
+            : bitboards[BKnight] | bitboards[BBishop] | bitboards[BRook] | bitboards[BQueen] | bitboards[BKing];
+    }
+
+    public ulong GetBitboard(int side, byte piece)
+    {
+        return bitboards[piece | (side << 3)];
+    }
 }
 
 [InlineArray(64)]

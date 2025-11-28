@@ -1,7 +1,10 @@
+using MiniPGN.Chess;
+using MiniPGN.Chess.Bitboards;
+
 namespace MiniPGN.Minimizer.Standard;
 using Chess.Board_Representation;
 using Parsing;
-using BoardUtils = Chess.Utils;
+using static Chess.Board_Representation.Pieces;
 
 public class Parser : GameParser
 {
@@ -28,16 +31,86 @@ public class Parser : GameParser
             
             case 3:
                 // non-disambiguated piece move: Nf3
-                
-            break;
+                return ParseRegularPieceMove(alg, board);
         }
         
         throw new NotationParsingException("Unable to parse notation " + alg);
     }
-
+    
     private static MoveResult ParseRegularPieceMove(string move, Board board)
     {
+        (int File, int rank) target = Utils.ParseSquare(move[1..]);
+        byte piece = Parse(move[0]);
+
+        MovingPiece pieceData = FindMovingPiece(board, target, piece);
+
+        Move foundMove = new Move(pieceData.Source.GetIndex(), target.GetIndex());
+
+        IEnumerable<byte> bytes = pieceData.FreePiece 
+            ? [(byte)(0b10 | Utils.GetSquareByte(target))] 
+            : [(byte)(0b11100 | piece), Utils.GetSquareByte(target)];
+
+        return new MoveResult(bytes, foundMove);
+    }
+    
+    private static MovingPiece FindMovingPiece(Board board, (int file, int rank) target, byte piece, Disambiguation d = Disambiguation.None, int dNum = 0)
+    {
+        if (d == Disambiguation.None)
+        {
+            ulong allPieces = FindMovingPieceBitboard(board, target);
+            if (ulong.PopCount(allPieces) == 1)
+                return new MovingPiece(Chess.Bitboards.Utils.FindFileRankFromBitboard(allPieces), true);   
+        }
+
+        ulong specifiedPieces = FindMovingPieceBitboard(board, target, piece);
+
+        if (d == Disambiguation.None)
+        {
+            if (ulong.PopCount(specifiedPieces) == 1)
+                return new MovingPiece(Chess.Bitboards.Utils.FindFileRankFromBitboard(specifiedPieces), false);
+        }
+
         throw new NotImplementedException();
+    }
+
+    private struct MovingPiece((int file, int rank) source, bool freePiece)
+    {
+        public readonly (int file, int rank) Source = source;
+        public readonly bool FreePiece = freePiece;
+    }
+
+    private static ulong FindMovingPieceBitboard(Board board, (int file, int rank) target, byte piece)
+    {
+        int targetSquare = target.GetIndex();
+        
+        return TypeOf(piece) switch
+        {
+            WKnight => Masks.KnightMasks[targetSquare] & board.GetBitboard(board.turn, WKnight),
+            WBishop => MagicLookup.Lookup.BishopBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WBishop),
+            WRook => MagicLookup.Lookup.RookBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WRook),
+            WQueen => MagicLookup.Lookup.QueenBitboards(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WQueen),
+            WKing => Masks.KingMasks[targetSquare] & board.GetBitboard(board.turn, WKing),
+            _ => throw new NotationParsingException($"Could not find moving bitboard of piece {piece}")
+        };
+    }
+
+    private static ulong FindMovingPieceBitboard(Board board, (int file, int rank) target)
+    {
+        int targetSquare = target.GetIndex();
+
+        return (Masks.KnightMasks[targetSquare] & board.GetBitboard(board.turn, WKnight))
+               | (MagicLookup.Lookup.BishopBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WBishop))
+               | (MagicLookup.Lookup.RookBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WRook))
+               | (MagicLookup.Lookup.QueenBitboards(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WQueen))
+               | (Masks.KingMasks[targetSquare] & board.GetBitboard(board.turn, WKing));
+    }
+    
+    private enum Disambiguation
+    {
+        None,
+        File,
+        Rank,
+        Double
     }
 
     private static MoveResult ParseSinglePawnMove(string move, Board board)
@@ -49,8 +122,8 @@ public class Parser : GameParser
         if (doubleMove)
             source = OffsetSquare(target, yOffset: board.turn == 0 ? -2 : 2);
 
-        int src = BoardUtils.GetIndex(source);
-        int trg = BoardUtils.GetIndex(target);
+        int src = source.GetIndex();
+        int trg = target.GetIndex();
         Flag flag = doubleMove ? (board.turn == 0 ? Flag.WhiteDoubleMove : Flag.BlackDoubleMove) : Flag.None;
 
         byte moveByte = Utils.GetSquareByte(target);

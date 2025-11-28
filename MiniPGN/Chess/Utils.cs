@@ -13,7 +13,7 @@ public static class Utils
         return rank * 8 + file;
     }
     
-    public static int GetIndex((int file, int rank) square)
+    public static int GetIndex(this (int file, int rank) square)
     {
         return square.rank * 8 + square.file;
     }
