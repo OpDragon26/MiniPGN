@@ -4,7 +4,7 @@ using MiniPGN.Chess.Board_Representation;
 using MiniPGN.Chess.Parsing;
 using MiniPGN.Minimizer;
 using Type = MiniPGN.Minimizer.Type;
-using Utils = MiniPGN.Minimizer.Utils;
+using BitboardUtils = MiniPGN.Chess.Bitboards.Utils;
 
 Init.Start();
 
@@ -32,4 +32,4 @@ byte[] byteFile = Encoder.Active.Encode(new(Type.Standard, Metadata.Include)
     ]
 });
 
-Console.WriteLine(Utils.ToString(byteFile));
+Console.WriteLine(MiniPGN.Minimizer.Utils.ToString(byteFile));

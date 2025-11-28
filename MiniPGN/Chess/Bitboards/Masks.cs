@@ -43,6 +43,13 @@ public static class Masks
         (-1, 0),
         (0, -1),
     ], true);
+    
+    public static readonly Pattern BishopPattern = new([
+        (1, 1),
+        (-1, 1),
+        (1, -1),
+        (-1, -1),
+    ], true);
 
     private static ulong GetKingMask((int file, int rank) square)
     {
