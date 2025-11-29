@@ -17,6 +17,17 @@ File metadata
  - `I` - Include metadata
  - `E` - Exclude metadata
 
+This is followed by a handful of optional metadata tags
+
+- `01` Date and time of encoding GMT time
+  - followed by 7 bytes
+    - 2 for year, 1 for month, 1 for day
+    - 1 for hour, 1 for minute, 1 for second
+- `02` Number of games
+  - 8 bytes interpreted as a Uint64
+
+The metadata section ends with `FF FF`
+
 ## Move encoding
 ### Standard/default:
 If the first (most significant) bit of the move is `0`, that means the move is a non-promoting pawn move

@@ -13,22 +13,22 @@ byte[] byteFile = Encoder.Active.Encode(new(Type.Standard, Metadata.Include)
     file =
     [
         "[Event \"Rated Blitz game\"]",
-        "[Site \"https://lichess.org/j1dkb5dw\"]",
-        "[Round \"?\"]",
-        "[White \"H___N\"]",
+        "[Site \"https://lichess.org/n3p0bgc7\"]",
+        "[White \"georgek\"]",
+        "[Black \"b777\"]",
         "[Black \"TheWeebles\"]",
-        "[Result \"0-1\"]",
-        "[UTCDate \"2013.01.01\"]",
-        "[UTCTime \"00:56:46\"]",
-        "[WhiteElo \"1595\"]",
-        "[BlackElo \"1546\"]",
-        "[WhiteRatingDiff \"-37\"]",
-        "[BlackRatingDiff \"+16\"]",
-        "[ECO \"C25\"]",
-        "[Opening \"Vienna Game: Max Lange Defense\"]",
-        "[TimeControl \"480+0\"]",
-        "[Termination \"Normal\"]",
-        "1. e4 e5 2. Nc3 a5 3. Nge2"
+        "[Result \"1-0\"]",
+        "[UTCDate \"2012.12.31\"]",
+        "[UTCTime \"23:12:39\"]",
+        "[WhiteElo \"1554\"]",
+        "[BlackElo \"1429\"]",
+        "[WhiteRatingDiff \"+7\"]",
+        "[BlackRatingDiff \"-7\"]",
+        "[ECO \"B01\"]",
+        "[Opening \"Scandinavian Defense: Mieses-Kotroc Variation\"]",
+        "[TimeControl \"300+2\"]",
+        "[Termination \"Time forfeit\"]",
+        "1. e4 d5 2. exd5 Qxd5 3. Nc3 Qe6+ 4. Qe2 Nf6 5. Nf3 b6 6. d3 h6 7. Qxe6 Bxe6 8. Be2 Nbd7 9. O-O Bg4 10. Bf4 Rc8 11. Nb5 Nd5 12. Bg3 a6 13. Nbd4 f6 14. Rad1 c5 15. Nb3 Nb4 16. d4 c4 17. Nc1 1-0"
     ]
 });
 

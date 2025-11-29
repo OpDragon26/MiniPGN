@@ -7,18 +7,27 @@ public abstract class GameParser
     {
         board = board.Clone();
         string[] moves = game.Split(' ');
+        byte last = 0;
 
         foreach (string move in moves)
         {
             // skip numbers
-            if (move[1] == '.')
+            if (move.EndsWith('.'))
                 continue;
 
             MoveResult result = ParseMove(move, board);
-            board.MakeMove(result.Move);
+            if (result.Move.Source != -1)
+                board.MakeMove(result.Move);
+            
             foreach (byte b in result.Bytes)
+            {
+                last = b;
                 yield return b;
+            }
         }
+
+        if ((last & 0b111_00_111) != 0b111_00_111)
+            yield return 0xFF;
 
         Console.WriteLine(board);
     }
