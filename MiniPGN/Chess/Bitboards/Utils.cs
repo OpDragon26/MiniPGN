@@ -31,6 +31,39 @@ public static class Utils
         yield return mask;
     }
 
+    public static ulong GeneratePinLineBitboard((int file, int rank) square, ulong blockers, Masks.Pattern pattern)
+    {
+        ulong lines = 0;
+        
+        foreach ((int file, int rank) offset in pattern.Offsets)
+        {
+            int distance = 0;
+            for (int d = 1; d < 7; d++)
+            {
+                (int  file, int rank) target = square.OffsetBy(offset, d);
+
+                if (!target.ValidSquare())
+                    break;
+                if ((target.Bitboard() & blockers) != 0)
+                {
+                    distance = d + 1;
+                    break;
+                }
+            }
+            
+            if (distance == 0)
+                continue;
+            
+            for (int d = 1; d < distance; d++)
+            {
+                (int  file, int rank) target = square.OffsetBy(offset, d);
+                lines |= target.Bitboard();
+            }
+        }
+        
+        return lines;
+    }
+    
     public static ulong GenerateMovesetBitboard((int file, int rank) square, ulong blockers, Masks.Pattern pattern)
     {
         ulong moves = 0;
