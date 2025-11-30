@@ -1,6 +1,7 @@
 namespace MiniPGN.Chess.Bitboards;
 using static MagicNumbers;
 using static Masks;
+using static Pins;
 
 public static class MagicLookup
 {
@@ -9,6 +10,8 @@ public static class MagicLookup
 
     private static readonly ulong[][] RookPinLines = new ulong[64][];
     private static readonly ulong[][] BishopPinLines = new ulong[64][];
+    private static readonly List<PinData>[][] RookPinData = new List<PinData>[64][];
+    private static readonly List<PinData>[][] BishopPinData = new List<PinData>[64][];
 
     public static void Init()
     {
@@ -21,11 +24,13 @@ public static class MagicLookup
             
             RookMoveBitboards[s] = new ulong[RookMagics[s].highest];
             RookPinLines[s] = new ulong[RookMagics[s].highest];
+            RookPinData[s] = new List<PinData>[RookMagics[s].highest];
             foreach (ulong combination in RookCombinations)
             {
                 ulong magicIndex = RookMagics[s].Calculate(combination);
                 RookMoveBitboards[s][magicIndex] = Utils.GenerateMovesetBitboard(square, combination, RookPattern);
                 RookPinLines[s][magicIndex] = Utils.GeneratePinLineBitboard(square, combination, RookPattern);
+                RookPinData[s][magicIndex] = GeneratePinData(square, combination, RookPattern);
             }
 
             ulong[] BishopCombinations = Utils.GenerateBitCombinations(BishopMasks[s]).Distinct().ToArray();
@@ -33,11 +38,13 @@ public static class MagicLookup
 
             BishopMoveBitboards[s] = new ulong[BishopMagics[s].highest];
             BishopPinLines[s] = new ulong[BishopMagics[s].highest];
+            BishopPinData[s] = new List<PinData>[BishopMagics[s].highest];
             foreach (ulong combination in BishopCombinations)
             {
                 ulong magicIndex = BishopMagics[s].Calculate(combination);
                 BishopMoveBitboards[s][magicIndex] = Utils.GenerateMovesetBitboard(square, combination, BishopPattern);
                 BishopPinLines[s][magicIndex] = Utils.GeneratePinLineBitboard(square, combination, BishopPattern);
+                BishopPinData[s][magicIndex] = GeneratePinData(square, combination, BishopPattern);
             }
             //Console.WriteLine($"Squares done {s + 1}/64");
         }
@@ -74,10 +81,17 @@ public static class MagicLookup
             ulong magicIndex = BishopMagics[square].Calculate(blockers & BishopMasks[square]);
             return BishopPinLines[square][magicIndex];
         }
-
-        public static ulong QueenPinLine(int square, ulong blockers)
+        
+        public static List<PinData> RookPinPath(int square, ulong blockers)
         {
-            return RookPinLine(square, blockers) | BishopPinLine(square, blockers);
+            ulong magicIndex = RookMagics[square].Calculate(blockers & RookMasks[square]);
+            return BishopPinData[square][magicIndex];
+        }
+
+        public static List<PinData> BishopPinPath(int square, ulong blockers)
+        {
+            ulong magicIndex = BishopMagics[square].Calculate(blockers & BishopMasks[square]);
+            return BishopPinData[square][magicIndex];
         }
     }
 }

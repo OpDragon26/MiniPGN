@@ -1,4 +1,7 @@
+using MiniPGN.Minimizer;
+
 namespace MiniPGN.Chess.Bitboards;
+using static MiniPGN.Chess.Bitboards.MagicLookup;
 
 public static class Utils
 {
@@ -31,6 +34,27 @@ public static class Utils
         yield return mask;
     }
 
+    public static ulong GenerateMovesetBitboard((int file, int rank) square, ulong blockers, Masks.Pattern pattern)
+    {
+        ulong moves = 0;
+        
+        foreach ((int file, int rank) offset in pattern.Offsets)
+        {
+            for (int m = 1; m < (pattern.Sliding ? 8 : 2); m++)
+            {
+                (int  file, int rank) target = square.OffsetBy(offset, m);
+
+                if (!target.ValidSquare())
+                    break;
+                moves |= target.Bitboard();
+                if ((target.Bitboard() & blockers) != 0)
+                    break;
+            }
+        }
+        
+        return moves;
+    }
+    
     public static ulong GeneratePinLineBitboard((int file, int rank) square, ulong blockers, Masks.Pattern pattern)
     {
         ulong lines = 0;
@@ -38,10 +62,9 @@ public static class Utils
         foreach ((int file, int rank) offset in pattern.Offsets)
         {
             int distance = 0;
-            for (int d = 1; d < 7; d++)
+            for (int d = 1; d < 8; d++)
             {
                 (int  file, int rank) target = square.OffsetBy(offset, d);
-
                 if (!target.ValidSquare())
                     break;
                 if ((target.Bitboard() & blockers) != 0)
@@ -64,27 +87,6 @@ public static class Utils
         return lines;
     }
     
-    public static ulong GenerateMovesetBitboard((int file, int rank) square, ulong blockers, Masks.Pattern pattern)
-    {
-        ulong moves = 0;
-        
-        foreach ((int file, int rank) offset in pattern.Offsets)
-        {
-            for (int m = 1; m < (pattern.Sliding ? 7 : 2); m++)
-            {
-                (int  file, int rank) target = square.OffsetBy(offset, m);
-
-                if (!target.ValidSquare())
-                    break;
-                moves |= target.Bitboard();
-                if ((target.Bitboard() & blockers) != 0)
-                    break;
-            }
-        }
-        
-        return moves;
-    }
-
     public static (int file, int rank) FindFileRankFromBitboard(ulong bitboard)
     {
         for (int file = 0; file < 8; file++)
