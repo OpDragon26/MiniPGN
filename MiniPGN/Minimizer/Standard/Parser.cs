@@ -53,11 +53,11 @@ public class Parser : GameParser
                 if (notation[2] == 'x')
                     return ParseSingleDisambiguatedCapture(notation, board);
                 // doubly disambiguated move
-                return ParseDoublyDisambiguatedPieceMove(notation, board);
+                return ParseDoublyDisambiguatedPieceMove(notation);
             case 6:
                 // doubly disambiguated capture
                 if (notation[3] == 'x')
-                    return ParseSingleDisambiguatedCapture(notation, board);
+                    return ParseDoublyDisambiguatedCapture(notation);
                 // capture promotion
                 return ParseCapturePromotion(notation, board);
         }
@@ -79,12 +79,12 @@ public class Parser : GameParser
         return new MoveResult([moveByte, (byte)(target.file | (srcFile << 3))], new(src, trg, piece, Flag.Promotion));
     }
     
-    private static MoveResult ParseDoublyDisambiguatedCapture(string move, Board board)
+    private static MoveResult ParseDoublyDisambiguatedCapture(string move)
     {
-        return ParseDoublyDisambiguatedPieceMove(move[..3] + move[4..], board);
+        return ParseDoublyDisambiguatedPieceMove(move[..3] + move[4..]);
     }
     
-    private static MoveResult ParseDoublyDisambiguatedPieceMove(string move, Board board)
+    private static MoveResult ParseDoublyDisambiguatedPieceMove(string move)
     {
         (int file, int rank) source = Utils.ParseSquare(move[1..3]);
         (int file, int rank) target = Utils.ParseSquare(move[3..]);
