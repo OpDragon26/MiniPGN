@@ -53,11 +53,11 @@ public class Parser : GameParser
                 if (notation[2] == 'x')
                     return ParseSingleDisambiguatedCapture(notation, board);
                 // doubly disambiguated move
-                return ParseDoublyDisambiguatedPieceMove(notation, board);
+                return ParseDoublyDisambiguatedPieceMove(notation);
             case 6:
                 // doubly disambiguated capture
                 if (notation[3] == 'x')
-                    return ParseSingleDisambiguatedCapture(notation, board);
+                    return ParseDoublyDisambiguatedCapture(notation);
                 // capture promotion
                 return ParseCapturePromotion(notation, board);
         }
@@ -79,12 +79,12 @@ public class Parser : GameParser
         return new MoveResult([moveByte, (byte)(target.file | (srcFile << 3))], new(src, trg, piece, Flag.Promotion));
     }
     
-    private static MoveResult ParseDoublyDisambiguatedCapture(string move, Board board)
+    private static MoveResult ParseDoublyDisambiguatedCapture(string move)
     {
-        return ParseDoublyDisambiguatedPieceMove(move[..3] + move[4..], board);
+        return ParseDoublyDisambiguatedPieceMove(move[..3] + move[4..]);
     }
     
-    private static MoveResult ParseDoublyDisambiguatedPieceMove(string move, Board board)
+    private static MoveResult ParseDoublyDisambiguatedPieceMove(string move)
     {
         (int file, int rank) source = Utils.ParseSquare(move[1..3]);
         (int file, int rank) target = Utils.ParseSquare(move[3..]);
@@ -190,7 +190,7 @@ public class Parser : GameParser
         {
             ulong allPieces = FindMovingPieceBitboard(board, target);
             if (ulong.PopCount(allPieces) == 1)
-                return new MovingPiece(Chess.Bitboards.Utils.FindFileRankFromBitboard(allPieces), true);   
+                return new MovingPiece(Chess.Bitboards.Utils.FindFileRankFromBitboard(allPieces), true);
         }
 
         ulong specifiedPieces = FindMovingPieceBitboard(board, target, piece);
@@ -219,7 +219,7 @@ public class Parser : GameParser
     {
         int targetSquare = target.GetIndex();
         
-        return TypeOf(piece) switch
+        ulong potentialPieces = TypeOf(piece) switch
         {
             WKnight => Masks.KnightMasks[targetSquare] & board.GetBitboard(board.turn, WKnight),
             WBishop => MagicLookup.Lookup.BishopBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WBishop),
@@ -228,17 +228,21 @@ public class Parser : GameParser
             WKing => Masks.KingMasks[targetSquare] & board.GetBitboard(board.turn, WKing),
             _ => throw new NotationParsingException($"Could not find moving bitboard of piece {piece}")
         };
+        
+        return FilterPins(board, target, potentialPieces);
     }
 
     private static ulong FindMovingPieceBitboard(Board board, (int file, int rank) target)
     {
         int targetSquare = target.GetIndex();
 
-        return (Masks.KnightMasks[targetSquare] & board.GetBitboard(board.turn, WKnight))
+        ulong potentialPieces = (Masks.KnightMasks[targetSquare] & board.GetBitboard(board.turn, WKnight))
                | (MagicLookup.Lookup.BishopBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WBishop))
                | (MagicLookup.Lookup.RookBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WRook))
                | (MagicLookup.Lookup.QueenBitboards(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WQueen))
                | (Masks.KingMasks[targetSquare] & board.GetBitboard(board.turn, WKing));
+        
+        return FilterPins(board, target, potentialPieces);
     }
     
     private enum Disambiguation
@@ -247,6 +251,20 @@ public class Parser : GameParser
         File,
         Rank,
         Double
+    }
+
+    private static ulong FilterPins(Board board, (int file, int rank) target, ulong pieces)
+    {
+        ulong t = target.Bitboard();
+        
+        ulong pinnedPieces = board
+            .GetPinState()
+            .Paths // list of pieces which are pinned and their movement paths
+            .Where(p => (p.Value & t) == 0) // where the path does not contain the target square
+            .Select(p => p.Key) // coordinate of the pinned piece
+            .Aggregate((a, b) => a | b); // bitboard of pieces which are pinned and cannot move to the target square
+        
+        return pieces & ~pinnedPieces; // remove those pieces from the ones found previously
     }
 
     private static MoveResult ParseSinglePawnMove(string move, Board board)

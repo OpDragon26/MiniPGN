@@ -4,7 +4,12 @@ namespace MiniPGN.Chess.Bitboards;
 
 public static class Pins
 {
-    public static PinState GetPinState(Board board, int side)
+    public static PinState GetPinState(this Board board)
+    {
+        return board.GetPinState(board.turn);
+    }
+    
+    public static PinState GetPinState(this Board board, int side)
     {
         Dictionary<ulong, ulong> paths = new();
         ulong pieces = 0;
@@ -72,24 +77,23 @@ public static class Pins
                 else
                     path |= target.Bitboard();
             }
-            
             if (found == 2)
                 result.Add(new PinData(pinPos.Bitboard(), pinnedPos.Bitboard(), path));
         }
         
         return result;
     }
-
-    public readonly struct PinState(ulong pieces, Dictionary<ulong, ulong> paths)
-    {
-        public readonly ulong Pieces = pieces;
-        public readonly Dictionary<ulong, ulong> Paths = paths;
-    }
     
-    public class PinData(ulong pos, ulong pinned, ulong path)
+    public readonly struct PinData(ulong pos, ulong pinned, ulong path)
     {
         public readonly ulong Pos = pos;
         public readonly ulong Pinned = pinned;
         public readonly ulong Path = path;
+    }
+    
+    public readonly struct PinState(ulong pieces, Dictionary<ulong, ulong> paths)
+    {
+        public readonly ulong Pieces = pieces;
+        public readonly Dictionary<ulong, ulong> Paths = paths;
     }
 }
