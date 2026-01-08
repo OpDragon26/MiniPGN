@@ -31,12 +31,12 @@ public class Standard(Version version) : Encoder(version)
             }
         }
         
-        List<byte> metaData = GetMetadata(profile);
+        List<byte> metaData = GetMetadata(profile, games);
         
         return metaData.Concat(byteList).ToArray();
     }
 
-    private List<byte> GetMetadata(EncoderProfile profile, bool includeDate = false, ulong numberOfGames = 0)
+    private List<byte> GetMetadata(EncoderProfile profile, ulong numberOfGames = 0)
     {
         List<byte> byteList = new();
         
@@ -46,7 +46,7 @@ public class Standard(Version version) : Encoder(version)
         byteList.AddRange(profile.FileMetadata().ToByteArray(false));
         
         // optional metaData
-        if (includeDate)
+        if (profile.IncludeDate)
         {
             byteList.Add(0x01);
             
@@ -62,7 +62,7 @@ public class Standard(Version version) : Encoder(version)
             byteList.Add((byte)date.Second);
         }
 
-        if (numberOfGames != 0)
+        if (profile.IncludeGameCount)
         {
             byteList.Add(0x02);
             byteList.AddRange(BitConverter.GetBytes(numberOfGames));
