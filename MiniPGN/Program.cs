@@ -28,7 +28,7 @@ byte[] byteFile = Encoder.Active.Encode(new(Type.Standard, Metadata.Exclude)
         "[Opening \"Scandinavian Defense: Mieses-Kotroc Variation\"]",
         "[TimeControl \"300+2\"]",
         "[Termination \"Time forfeit\"]",
-        "1. e4 e5 2. Ne2 d5 3. Nbc3 dxe4 4. Nxe4 Nc6 5. N4c3 e4 6. f3 exf3 7. Nd4 fxg2 8. Nb3 gxh1=N 9. Be2 Ng3 10. a3 Nf6 11. h3 Nfe4 12. a4 Ng5 13. a5 Nb4 14. a6 Nxa6 15. Ra2 Nc5 16. Ra3 Ng5e4 0-1"
+        "1. e4 e5 2. Ne2 d5 3. Nbc3 dxe4 4. Nxe4 Nc6 5. N4c3 e4 6. f3 exf3 7. Nd4 fxg2 8. Nb3 gxh1=N 9. Be2 Ng3 10. a3 Nf6 11. h3 Nfe4 12. a4 Ng5 13. a5 Nb4 14. a6 Nxa6 15. Ra2 Nc5 16. Ra3 Ng5e4"
     ]
 });
 

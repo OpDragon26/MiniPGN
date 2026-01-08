@@ -23,6 +23,10 @@ public class Standard(Version version) : Encoder(version)
                 if (profile.metadataHandling == Metadata.Include)
                     byteList.Add(0xFF);
                 byteList.AddRange(parser.ParseGame(line));
+                
+                if ((byteList[^1] & 0b11100111) == 11100111)
+                    byteList.Add(0xFF);
+                
                 games++;
             }
         }
