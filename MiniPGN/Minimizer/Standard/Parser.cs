@@ -1,5 +1,7 @@
+using System.Globalization;
 using MiniPGN.Chess;
 using MiniPGN.Chess.Bitboards;
+using MiniPGN.Chess.Parsing;
 
 namespace MiniPGN.Minimizer.Standard;
 using Chess.Board_Representation;
@@ -15,6 +17,10 @@ public class Parser : GameParser
     
     protected override MoveResult ParseMove(string notation, Board board)
     {
+        Console.WriteLine(notation);
+        Console.WriteLine(board.turn);
+        Console.WriteLine(Display.GetBoardString(board));
+        
         if (notation.EndsWith('#') || notation.EndsWith('+'))
             return ParseMove(notation[..^1], board);
 
@@ -69,6 +75,7 @@ public class Parser : GameParser
     {
         byte piece = Parse(move[5]);
         byte moveByte = (byte)(0b110_00_000 | piece);
+        piece = (byte)(piece | (board.turn << 3));
         
         (int file, int rank) target = Utils.ParseSquare(move[2..4]);
         int srcFile = move[0].AsFile();
@@ -122,7 +129,7 @@ public class Parser : GameParser
         }
         else
         {
-            MovingPiece pieceData = FindMovingPiece(board, target, piece, Disambiguation.Rank, move[1].ToNum());
+            MovingPiece pieceData = FindMovingPiece(board, target, piece, Disambiguation.Rank, move[1].ToNum() - 1);
             
             int src = pieceData.Source.GetIndex();
             int trg = target.GetIndex();
@@ -138,6 +145,7 @@ public class Parser : GameParser
         byte moveByte = 0b1100_0000;
         byte piece = Parse(move[3]);
         moveByte |= piece;
+        piece = (byte)(piece | (board.turn << 0));
         int file = move[0].AsFile();
         
         int trg = (file, board.turn == 0 ? 7 : 0).GetIndex();
@@ -194,12 +202,11 @@ public class Parser : GameParser
         }
 
         ulong specifiedPieces = FindMovingPieceBitboard(board, target, piece);
-
+        
         if (d == Disambiguation.File)
             specifiedPieces &= Chess.Bitboards.Utils.GetFile(dNum);
         else if (d == Disambiguation.Rank)
             specifiedPieces &= Chess.Bitboards.Utils.GetRank(dNum);
-        
         
         if (ulong.PopCount(specifiedPieces) == 1)
             return new MovingPiece(Chess.Bitboards.Utils.FindFileRankFromBitboard(specifiedPieces), false);

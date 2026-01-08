@@ -27,7 +27,7 @@ public class Standard(Version version) : Encoder(version)
             }
         }
         
-        List<byte> metaData = GetMetadata(profile, true, games);
+        List<byte> metaData = GetMetadata(profile);
         
         return metaData.Concat(byteList).ToArray();
     }
