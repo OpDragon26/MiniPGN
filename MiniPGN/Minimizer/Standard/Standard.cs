@@ -36,6 +36,21 @@ public class Standard(Version version) : Encoder(version)
         return metaData.Concat(byteList).ToArray();
     }
 
+    public override DecodeResult Decode(byte[] bytes)
+    {
+        IEnumerator<byte> file = ((IEnumerable<byte>)bytes).GetEnumerator();
+
+        DecodeResult result = ExtractMetadata(file);
+        
+        file.Dispose();
+        return result;
+    }
+
+    private DecodeResult ExtractMetadata(IEnumerator<byte> file)
+    {
+        throw new NotImplementedException();
+    }
+    
     private List<byte> GetMetadata(EncoderProfile profile, ulong numberOfGames = 0)
     {
         List<byte> byteList = new();
