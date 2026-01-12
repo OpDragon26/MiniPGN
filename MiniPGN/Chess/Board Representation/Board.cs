@@ -6,17 +6,30 @@ using static Pieces;
 using static Parsing.FENParser;
 using static Parsing.Display;
 
-public class Board(PieceBoard board, Bitboard bitboards, int turn)
+public class Board
 {
-    public int turn = turn;
-    private PieceBoard board = board;
-    public Bitboard bitboards = bitboards;
+    public int turn;
+    private PieceBoard board;
+    public Bitboard bitboards;
+    public ValuePair kingPositions;
     
     public int enPassant = -1;
     
-    public Board(string FEN) : this(ParsePieceBoard(FEN.Split(' ')[0]), new(), (FEN.Split(' ')[1][0] == 'w' ? 0 : 1))
+    public Board(PieceBoard board, Bitboard bitboards, int turn, ValuePair kingPositions)
     {
+        this.turn = turn;
+        this.board = board;
+        this.bitboards = bitboards;
+        this.kingPositions = kingPositions;
+    }
+
+    
+    public Board(string FEN)
+    {
+        board = ParsePieceBoard(FEN.Split(' ')[0]);
         bitboards = FillBitboard(board);
+        kingPositions = FindKings(board);
+        turn = FEN.Split(' ')[1][0] == 'w' ? 0 : 1;
     }
     
     public void MakeMove(Move move)
@@ -26,6 +39,9 @@ public class Board(PieceBoard board, Bitboard bitboards, int turn)
             
         byte movingPiece = promotion ? move.Promotion : board[move.Source];
 
+        if (TypeOf(movingPiece) == WKing)
+            kingPositions[turn] = move.Target;
+        
         bitboards[movingPiece, move.Source] = false;
         bitboards[movingPiece, move.Target] = true;
         if (capture)
@@ -129,7 +145,7 @@ public class Board(PieceBoard board, Bitboard bitboards, int turn)
 
     public Board Clone()
     {
-        return new Board(board, bitboards, turn);
+        return new Board(board, bitboards, turn, kingPositions);
     }
 
     public static Board NewStartingBoard()
@@ -185,4 +201,15 @@ public struct Bitboard
                 this[piece] &= ~GetSquare(square);
         }
     }
+    
+    public ulong Get(byte piece, int side)
+    {
+        return this[piece | (side << 3)];
+    }
+}
+
+[InlineArray(2)]
+public struct ValuePair
+{
+    public int pos;
 }
