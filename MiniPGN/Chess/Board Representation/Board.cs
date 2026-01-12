@@ -49,14 +49,14 @@ public class Board
         
         board[move.Source] = Empty;
         board[move.Target] = movingPiece;
+
+        if (!promotion)
+        {
+            enPassant = -1;
+            if ((byte)move.Flag > 1)
+                HandleSpecialMove(move);
+        }
         
-        if (promotion)
-            return;
-
-        enPassant = -1;
-        if ((byte)move.Flag > 1)
-            HandleSpecialMove(move);
-
         turn = 1 - turn;
     }
 

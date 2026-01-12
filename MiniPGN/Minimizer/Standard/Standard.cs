@@ -23,16 +23,35 @@ public class Standard(Version version) : Encoder(version)
                 if (profile.metadataHandling == Metadata.Include)
                     byteList.Add(0xFF);
                 byteList.AddRange(parser.ParseGame(line));
+                
+                if ((byteList[^1] & 0b11100111) == 11100111)
+                    byteList.Add(0xFF);
+                
                 games++;
             }
         }
         
-        List<byte> metaData = GetMetadata(profile, true, games);
+        List<byte> metaData = GetMetadata(profile, games);
         
         return metaData.Concat(byteList).ToArray();
     }
 
-    private List<byte> GetMetadata(EncoderProfile profile, bool includeDate = false, ulong numberOfGames = 0)
+    public override DecodeResult Decode(byte[] bytes)
+    {
+        IEnumerator<byte> file = ((IEnumerable<byte>)bytes).GetEnumerator();
+
+        DecodeResult result = ExtractMetadata(file);
+        
+        file.Dispose();
+        return result;
+    }
+
+    private DecodeResult ExtractMetadata(IEnumerator<byte> file)
+    {
+        throw new NotImplementedException();
+    }
+    
+    private List<byte> GetMetadata(EncoderProfile profile, ulong numberOfGames = 0)
     {
         List<byte> byteList = new();
         
@@ -42,7 +61,7 @@ public class Standard(Version version) : Encoder(version)
         byteList.AddRange(profile.FileMetadata().ToByteArray(false));
         
         // optional metaData
-        if (includeDate)
+        if (profile.IncludeDate)
         {
             byteList.Add(0x01);
             
@@ -58,7 +77,7 @@ public class Standard(Version version) : Encoder(version)
             byteList.Add((byte)date.Second);
         }
 
-        if (numberOfGames != 0)
+        if (profile.IncludeGameCount)
         {
             byteList.Add(0x02);
             byteList.AddRange(BitConverter.GetBytes(numberOfGames));

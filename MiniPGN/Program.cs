@@ -8,7 +8,7 @@ using BitboardUtils = MiniPGN.Chess.Bitboards.Utils;
 
 Init.Start();
 
-byte[] byteFile = Encoder.Active.Encode(new(Type.Standard, Metadata.Include)
+byte[] byteFile = Encoder.Active.Encode(new(Type.Standard, Metadata.Exclude)
 {
     file =
     [
@@ -28,7 +28,7 @@ byte[] byteFile = Encoder.Active.Encode(new(Type.Standard, Metadata.Include)
         "[Opening \"Scandinavian Defense: Mieses-Kotroc Variation\"]",
         "[TimeControl \"300+2\"]",
         "[Termination \"Time forfeit\"]",
-        "1. e4 d5 2. exd5 Qxd5 3. Nc3 Qe6+ 4. Qe2 Nf6 5. Nf3 b6 6. d3 h6 7. Qxe6 Bxe6 8. Be2 Nbd7 9. O-O Bg4 10. Bf4 Rc8 11. Nb5 Nd5 12. Bg3 a6 13. Nbd4 f6 14. Rad1 c5 15. Nb3 Nb4 16. d4 c4 17. Nc1 1-0"
+        "1. e4 e5 2. Ne2 d5 3. Nbc3 dxe4 4. Nxe4 Nc6 5. N4c3 e4 6. f3 exf3 7. Nd4 fxg2 8. Nb3 gxh1=N 9. Be2 Ng3 10. a3 Nf6 11. h3 Nfe4 12. a4 Ng5 13. a5 Nb4 14. a6 Nxa6 15. Ra2 Nc5 16. Ra3 Ng5e4"
     ]
 });
 
