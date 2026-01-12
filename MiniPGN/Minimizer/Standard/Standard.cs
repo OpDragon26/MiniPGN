@@ -6,7 +6,7 @@ public class Standard(Version version) : Encoder(version)
 {
     private static readonly Parser parser = new();
     
-    public override byte[] Encode(EncoderProfile profile, string fileName = "Result.mpgn")
+    public override byte[] Encode(EncoderProfile profile)
     {
         List<byte> byteList = new();
         ulong games = 0;
@@ -40,15 +40,10 @@ public class Standard(Version version) : Encoder(version)
     {
         IEnumerator<byte> file = ((IEnumerable<byte>)bytes).GetEnumerator();
 
-        DecodeResult result = ExtractMetadata(file);
+        DecodeResult result = DecodeHelper.ExtractMetadata(file);
         
         file.Dispose();
         return result;
-    }
-
-    private DecodeResult ExtractMetadata(IEnumerator<byte> file)
-    {
-        throw new NotImplementedException();
     }
     
     private List<byte> GetMetadata(EncoderProfile profile, ulong numberOfGames = 0)
