@@ -1,7 +1,4 @@
-using MiniPGN.Minimizer;
-
 namespace MiniPGN.Chess.Bitboards;
-using static MiniPGN.Chess.Bitboards.MagicLookup;
 
 public static class Utils
 {
@@ -40,7 +37,7 @@ public static class Utils
         
         foreach ((int file, int rank) offset in pattern.Offsets)
         {
-            for (int m = 1; m < (pattern.Sliding ? 8 : 2); m++)
+            for (int m = 1; m < (pattern.Sliding ? 7 : 2); m++)
             {
                 (int  file, int rank) target = square.OffsetBy(offset, m);
 
@@ -54,39 +51,7 @@ public static class Utils
         
         return moves;
     }
-    
-    public static ulong GeneratePinLineBitboard((int file, int rank) square, ulong blockers, Masks.Pattern pattern)
-    {
-        ulong lines = 0;
-        
-        foreach ((int file, int rank) offset in pattern.Offsets)
-        {
-            int distance = 0;
-            for (int d = 1; d < 8; d++)
-            {
-                (int  file, int rank) target = square.OffsetBy(offset, d);
-                if (!target.ValidSquare())
-                    break;
-                if ((target.Bitboard() & blockers) != 0)
-                {
-                    distance = d + 1;
-                    break;
-                }
-            }
-            
-            if (distance == 0)
-                continue;
-            
-            for (int d = 1; d < distance; d++)
-            {
-                (int  file, int rank) target = square.OffsetBy(offset, d);
-                lines |= target.Bitboard();
-            }
-        }
-        
-        return lines;
-    }
-    
+
     public static (int file, int rank) FindFileRankFromBitboard(ulong bitboard)
     {
         for (int file = 0; file < 8; file++)

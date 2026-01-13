@@ -7,7 +7,7 @@ public abstract class Encoder(Version version)
     protected readonly Version Version = version;
 
     public static readonly Encoder Active = new Standard.Standard(new Version(0,1));
-    public abstract byte[] Encode(EncoderProfile profile);
+    public abstract byte[] Encode(EncoderProfile profile, string fileName = "Result.mpgn");
     public abstract DecodeResult Decode(byte[] file);
 }
 

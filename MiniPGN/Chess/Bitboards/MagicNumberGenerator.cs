@@ -36,7 +36,8 @@ public static class MagicNumberGenerator
         return (number, shift + extraShift, result.Max() + 1);
     }
 
-    public static (ulong number, int shift, ulong highest) GenerateMulti(ulong[] combinations, int shift = 48, int threads = 5)
+    public static (ulong number, int shift, ulong highest) GenerateMulti(ulong[] combinations, int shift = 48,
+        int threads = 5)
     {
         bool found = false;
         (ulong number, int shift, ulong highest) magic = (ulong.MaxValue, -1, int.MaxValue);

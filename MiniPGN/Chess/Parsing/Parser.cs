@@ -38,19 +38,4 @@ public static class FENParser
         
         return bitboards;
     }
-
-    public static ValuePair FindKings(PieceBoard board)
-    {
-        ValuePair positions = new();
-
-        for (int square = 0; square < 64; square++)
-        {
-            if (board[square] == Pieces.WKing)
-                positions[0] = square;
-            else if (board[square] == Pieces.BKing)
-                positions[1] = square;
-        }
-        
-        return positions;
-    }
 }
