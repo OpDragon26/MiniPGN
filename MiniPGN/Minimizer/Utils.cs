@@ -13,7 +13,7 @@ public static class Utils
 
     public static IEnumerable<byte> ToByteArray(this string str, bool nullTerminated)
     {
-        IEnumerable<byte> bytes = Encoding.UTF8.GetBytes(str);
+        IEnumerable<byte> bytes = Encoding.Latin1.GetBytes(str);
         return nullTerminated ? bytes.Append<byte>(0) : bytes;
     }
 
@@ -28,5 +28,15 @@ public static class Utils
     public static byte[] ToByteArray(this ushort value)
     {
         return [(byte)(value >> 8), (byte)value];
+    }
+
+    public static string GetString(this IEnumerable<byte> bytes)
+    {
+        return Encoding.Latin1.GetString(bytes.ToArray());
+    }
+
+    public static char GetChar(this byte b)
+    {
+        return Encoding.Latin1.GetChars([b])[0];
     }
 }

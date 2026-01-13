@@ -26,3 +26,10 @@ public class NotationParsingException : MiniPGNException
     public NotationParsingException(string message) : base(message) { }
     public NotationParsingException(string message, Exception inner) : base(message, inner) { }
 }
+
+public class MetadataExtractionException : MiniPGNException
+{
+    public MetadataExtractionException() { }
+    public MetadataExtractionException(string message) : base(message) { }
+    public MetadataExtractionException(string message, Exception inner) : base(message, inner) { }
+}
