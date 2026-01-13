@@ -11,7 +11,8 @@ public static class DecodeHelper
         if (!signature.Equals("MPGN"))
             throw new MetadataExtractionException($"File signature incorrect. Expected 'MPGN' found {signature}");
 
-        // mandatory metadata: type and game metadata handling
+        // mandatory metadata: version, type, and game metadata handling
+        Version v = ExtractVersion(file);
         char type = file.Next().GetChar();
         char metaDataHandling = file.Next().GetChar();
 
@@ -20,9 +21,31 @@ public static class DecodeHelper
         
         TryExtractOptionalMetadata(file, out string date, out string gameCount);
         
-        return new DecodeResult(new EncoderProfile(t, mh, date == "", gameCount == ""), [], date, gameCount);
+        return new DecodeResult(new EncoderProfile(t, mh, date == "", gameCount == ""), [], v, date, gameCount);
     }
 
+    private static Version ExtractVersion(IEnumerator<byte> file)
+    {
+        string versionString = file
+            .Extract(6)
+            .GetString();
+        
+        if (versionString[0] != 'v' || versionString[3] != '.')
+            throw new MetadataExtractionException($"Incorrect version format. Expected 'v##.##' found {versionString}'");
+
+        try
+        {
+            int major = int.Parse(versionString[1..3]);
+            int minor = int.Parse(versionString[4..6]);
+            
+            return new Version((byte)major, (byte)minor);
+        }
+        catch
+        {
+            throw new MetadataExtractionException($"Incorrect version format. Expected 'v##.##' found {versionString}'");
+        }
+    }
+    
     private static Type GetType(char t)
     {
         return t switch

@@ -39,16 +39,14 @@ public class Standard(Version version) : Encoder(version)
     public override DecodeResult Decode(byte[] bytes)
     {
         IEnumerator<byte> file = ((IEnumerable<byte>)bytes).GetEnumerator();
+        file.MoveNext();
 
-        DecodeResult result = ExtractMetadata(file);
+        DecodeResult result = DecodeHelper.ExtractMetadata(file);
+
+        Console.WriteLine(result);
         
         file.Dispose();
         return result;
-    }
-
-    private DecodeResult ExtractMetadata(IEnumerator<byte> file)
-    {
-        throw new NotImplementedException();
     }
     
     private List<byte> GetMetadata(EncoderProfile profile, ulong numberOfGames = 0)

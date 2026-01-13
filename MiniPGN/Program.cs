@@ -32,4 +32,6 @@ byte[] byteFile = Encoder.Active.Encode(new(Type.Standard, Metadata.Exclude)
     ]
 });
 
+Encoder.Active.Decode([0x4D, 0x50, 0x47, 0x4E, 0x76, 0x30, 0x30, 0x2E, 0x30, 0x31, 0x53, 0x45, 0xFF, 0xFF]);
+
 Console.WriteLine(MiniPGN.Minimizer.Utils.ToString(byteFile));

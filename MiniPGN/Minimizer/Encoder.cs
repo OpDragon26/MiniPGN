@@ -13,7 +13,7 @@ public abstract class Encoder(Version version)
 
 public class EncoderProfile(Type type, Metadata metadataHandling, bool includeDate = false, bool includeGameCount = false)
 {
-    private readonly Type type = type;
+    public readonly Type type = type;
     public readonly Metadata metadataHandling = metadataHandling;
 
     public readonly bool IncludeDate = includeDate;
@@ -43,12 +43,25 @@ public readonly struct Version(byte major, byte minor) : IEquatable<Version>
     }
 }
 
-public class DecodeResult(EncoderProfile profile, IEnumerable<string> result, string encodeDate = "", string gameCount = "")
+public class DecodeResult(EncoderProfile profile, IEnumerable<string> result, Version version, string encodeDate = "", string gameCount = "")
 {
-    public EncoderProfile Profile = profile;
-    public IEnumerable<string> Result = result;
-    public string EncodeDate = encodeDate;
-    public string GameCount = gameCount;
+    private readonly EncoderProfile Profile = profile;
+    private readonly IEnumerable<string> Result = result;
+    private readonly string EncodeDate = encodeDate;
+    private readonly string GameCount = gameCount;
+    private readonly Version Version = version;
+
+    public override string ToString()
+    {
+        return $"Decode Result:\n" +
+               $"-----------------------------\n" +
+               $"Version: {Version}" +
+               $"| Encoding: {Profile.type}\n" +
+               $"| Metadata: {Profile.metadataHandling}\n" +
+               $"{(Profile.IncludeDate ? $"| Date: {EncodeDate}\n" : "")}" +
+               $"{(Profile.IncludeGameCount ? $"| Number of games: {GameCount}" : "")}" +
+               $"| Result: {Result.Count()} lines";
+    }
 }
 
 public enum Type
