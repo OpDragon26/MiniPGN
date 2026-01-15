@@ -44,7 +44,7 @@ If the first bit is `1`
 
 - If the second bit is `1`
   - And the 3rd bit is `0`, that means the move is a promotion, and the last 3 bits represent the piece being promoted to
-    - In the second byte, since the files are always given, 3 bits represent the source file and 3 bits represent the target file. This is necessary for disambiguation
+    - In the second byte, since the ranks are always given, 3 bits represent the source file and 3 bits represent the target file. This is necessary for disambiguation
     - The byte representation of exd8=Q would be `110 00 101  00 100 011`
 
   - If the 3rd bit is `1` that means the move is a piece move, if multiple other pieces could move to the target square
@@ -182,6 +182,7 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - 2 bytes
 - `FF` Begin game
   - No longer looks for tag pairs, instead starts parsing the next byte as a game
+
 
 
 
