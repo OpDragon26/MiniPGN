@@ -54,12 +54,12 @@ public class DecodeResult(EncoderProfile profile, IEnumerable<string> result, Ve
     public override string ToString()
     {
         return $"Decode Result:\n" +
-               $"-----------------------------\n" +
-               $"Version: {Version}" +
+               $"----------------------------------------------------\n" +
+               $"| Version: {Version}\n" +
                $"| Encoding: {Profile.type}\n" +
                $"| Metadata: {Profile.metadataHandling}\n" +
-               $"{(Profile.IncludeDate ? $"| Date: {EncodeDate}\n" : "")}" +
-               $"{(Profile.IncludeGameCount ? $"| Number of games: {GameCount}" : "")}" +
+               $"{(Profile.IncludeDate ? $"| Date (GMT): {EncodeDate}\n" : "")}" +
+               $"{(Profile.IncludeGameCount ? $"| Number of games: {GameCount}\n" : "")}" +
                $"| Result: {Result.Count()} lines";
     }
 }

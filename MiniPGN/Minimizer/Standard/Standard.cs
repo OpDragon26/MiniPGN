@@ -42,10 +42,11 @@ public class Standard(Version version) : Encoder(version)
         file.MoveNext();
 
         DecodeResult result = DecodeHelper.ExtractMetadata(file);
-
-        Console.WriteLine(result);
         
         file.Dispose();
+        
+        Console.WriteLine(result);
+        
         return result;
     }
     
@@ -78,7 +79,7 @@ public class Standard(Version version) : Encoder(version)
         if (profile.IncludeGameCount)
         {
             byteList.Add(0x02);
-            byteList.AddRange(BitConverter.GetBytes(numberOfGames));
+            byteList.AddRange(BitConverter.GetBytes(numberOfGames).Reverse());
         }
         
         byteList.AddRange([0xFF, 0xFF]);

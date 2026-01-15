@@ -21,7 +21,7 @@ public static class DecodeHelper
         
         TryExtractOptionalMetadata(file, out string date, out string gameCount);
         
-        return new DecodeResult(new EncoderProfile(t, mh, date == "", gameCount == ""), [], v, date, gameCount);
+        return new DecodeResult(new EncoderProfile(t, mh, !date.Equals(""), !gameCount.Equals("")), [], v, date, gameCount);
     }
 
     private static Version ExtractVersion(IEnumerator<byte> file)
@@ -105,15 +105,18 @@ public static class DecodeHelper
         int minute = bytes[5];
         int second = bytes[6];
         
-        return $"{year}.{month}.{day} {hour}:{minute}:{second}";
+        return $"{year}.{month.Format()}.{day.Format()} {hour.Format()}:{minute.Format()}:{second.Format()}";
     }
 
     private static string ExtractGameCount(IEnumerator<byte> file)
     {
-        byte[] bytes = file
-            .Extract(8)
-            .ToArray();
+        IEnumerable<byte> bytes = file.Extract(8);
 
-        return BitConverter.ToUInt64(bytes).ToString();
+        return BitConverter.ToUInt64(bytes.Reverse().ToArray()).ToString();
+    }
+
+    private static string Format(this int n)
+    {
+        return n.ToString().PadLeft(2, '0');
     }
 }

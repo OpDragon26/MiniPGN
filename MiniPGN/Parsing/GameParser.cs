@@ -28,8 +28,6 @@ public abstract class GameParser
 
         if ((last & 0b111_00_111) != 0b111_00_111)
             yield return 0xFF;
-
-        Console.WriteLine(board);
     }
     
     public virtual IEnumerable<byte> ParseGame(string game)
@@ -37,7 +35,7 @@ public abstract class GameParser
         return ParseGame(game, Board.NewStartingBoard());
     }
     
-    protected abstract MoveResult ParseMove(string move, Board board);
+    protected abstract MoveResult ParseMove(string move, Board board, bool log = false);
     
     protected struct MoveResult(IEnumerable<byte> bytes, Move move)
     {

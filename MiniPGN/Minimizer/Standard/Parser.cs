@@ -15,11 +15,15 @@ public class Parser : GameParser
     private static readonly MoveResult WhiteLongCastle = new([0b111_00_110, 0b00_010_000], new( 4,  6, flag: Flag.WhiteLongCastle));
     private static readonly MoveResult BlackLongCastle = new([0b111_00_110, 0b00_010_111], new(60, 62, flag: Flag.BlackLongCastle));
     
-    protected override MoveResult ParseMove(string notation, Board board)
+    protected override MoveResult ParseMove(string notation, Board board, bool log = false)
     {
-        Console.WriteLine(notation);
-        Console.WriteLine(board.turn);
-        Console.WriteLine(Display.GetBoardString(board));
+        if (log)
+        {
+            Console.WriteLine(notation);
+            Console.WriteLine(board.turn);
+            Console.WriteLine(Display.GetBoardString(board));
+        }
+        
         
         if (notation.EndsWith('#') || notation.EndsWith('+'))
             return ParseMove(notation[..^1], board);
