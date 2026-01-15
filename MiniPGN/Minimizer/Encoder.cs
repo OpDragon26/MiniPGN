@@ -1,78 +1,45 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace MiniPGN.Minimizer;
+using Chess.Board_Representation;
 
-public abstract class Encoder(Version version)
+public abstract class Encoder
 {
-    protected readonly Version Version = version;
+    protected virtual IEnumerable<byte> ParseGame(string game, Board board)
+    {
+        board = board.Clone();
+        string[] moves = game.Split(' ');
+        byte last = 0;
 
-    public static readonly Encoder Active = new Standard.Standard(new Version(0,1));
-    public abstract byte[] Encode(EncoderProfile profile, string fileName = "Result.mpgn");
-    public abstract DecodeResult Decode(byte[] file);
-}
+        foreach (string move in moves)
+        {
+            // skip numbers
+            if (move.EndsWith('.'))
+                continue;
 
-public class EncoderProfile(Type type, Metadata metadataHandling, bool includeDate = false, bool includeGameCount = false)
-{
-    public readonly Type type = type;
-    public readonly Metadata metadataHandling = metadataHandling;
+            MoveResult result = ParseMove(move, board);
+            if (result.Move.Source != -1)
+                board.MakeMove(result.Move);
+            
+            foreach (byte b in result.Bytes)
+            {
+                last = b;
+                yield return b;
+            }
+        }
 
-    public readonly bool IncludeDate = includeDate;
-    public readonly bool IncludeGameCount = includeGameCount;
+        if ((last & 0b111_00_111) != 0b111_00_111)
+            yield return 0xFF;
+    }
     
-    public string[] file = [];
-
-    public string FileMetadata()
+    public virtual IEnumerable<byte> ParseGame(string game)
     {
-        return $"{type.ToString()[0]}{metadataHandling.ToString()[0]}";
+        return ParseGame(game, Board.NewStartingBoard());
     }
-}
-
-public readonly struct Version(byte major, byte minor) : IEquatable<Version>
-{
-    private readonly byte Major = major;
-    private readonly byte Minor = minor;
     
-    public override string ToString()
+    protected abstract MoveResult ParseMove(string move, Board board, bool log = false);
+    
+    protected struct MoveResult(IEnumerable<byte> bytes, Move move)
     {
-        return $"v{Major.ToString().PadLeft(2, '0')}.{Minor.ToString().PadLeft(2, '0')}";
+        public readonly IEnumerable<byte> Bytes = bytes;
+        public readonly Move Move = move;
     }
-
-    public bool Equals(Version other)
-    {
-        return Major == other.Major && Minor == other.Minor;
-    }
-}
-
-public class DecodeResult(EncoderProfile profile, IEnumerable<string> result, Version version, string encodeDate = "", string gameCount = "")
-{
-    private readonly EncoderProfile Profile = profile;
-    private readonly IEnumerable<string> Result = result;
-    private readonly string EncodeDate = encodeDate;
-    private readonly string GameCount = gameCount;
-    private readonly Version Version = version;
-
-    public override string ToString()
-    {
-        return $"Decode Result:\n" +
-               $"----------------------------------------------------\n" +
-               $"| Version: {Version}\n" +
-               $"| Encoding: {Profile.type}\n" +
-               $"| Metadata: {Profile.metadataHandling}\n" +
-               $"{(Profile.IncludeDate ? $"| Date (GMT): {EncodeDate}\n" : "")}" +
-               $"{(Profile.IncludeGameCount ? $"| Number of games: {GameCount}\n" : "")}" +
-               $"| Result: {Result.Count()} lines";
-    }
-}
-
-public enum Type
-{
-    Fast,
-    Standard,
-    Overoptimized,
-}
-
-public enum Metadata
-{
-    Exclude,
-    Include
 }

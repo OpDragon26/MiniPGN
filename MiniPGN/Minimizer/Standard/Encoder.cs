@@ -1,14 +1,14 @@
-using System.Globalization;
 using MiniPGN.Chess;
 using MiniPGN.Chess.Bitboards;
 using MiniPGN.Chess.Parsing;
+using MiniPGN.Chess.Board_Representation;
+using MiniPGN.Parsing;
+using static MiniPGN.Chess.Board_Representation.Pieces;
+using static MiniPGN.Parsing.Utils;
 
 namespace MiniPGN.Minimizer.Standard;
-using Chess.Board_Representation;
-using Parsing;
-using static Chess.Board_Representation.Pieces;
 
-public class Parser : GameParser
+public class Encoder : Minimizer.Encoder
 {
     private static readonly MoveResult WhiteShortCastle = new([0b111_00_110, 0b00_110_000], new( 4,  6, flag: Flag.WhiteShortCastle));
     private static readonly MoveResult BlackShortCastle = new([0b111_00_110, 0b00_110_111], new(60, 62, flag: Flag.BlackShortCastle));
@@ -81,9 +81,9 @@ public class Parser : GameParser
         byte moveByte = (byte)(0b110_00_000 | piece);
         piece = (byte)(piece | (board.turn << 3));
         
-        (int file, int rank) target = Utils.ParseSquare(move[2..4]);
+        (int file, int rank) target = ParseSquare(move[2..4]);
         int srcFile = move[0].AsFile();
-
+        
         int src = (srcFile, board.turn == 0 ? 6 : 1).GetIndex();
         int trg = target.GetIndex();
 
@@ -97,8 +97,8 @@ public class Parser : GameParser
     
     private static MoveResult ParseDoublyDisambiguatedPieceMove(string move)
     {
-        (int file, int rank) source = Utils.ParseSquare(move[1..3]);
-        (int file, int rank) target = Utils.ParseSquare(move[3..]);
+        (int file, int rank) source = ParseSquare(move[1..3]);
+        (int file, int rank) target = ParseSquare(move[3..]);
 
         byte piece = Parse(move[0]);
         byte moveByte = (byte)(0b111_11_000 | piece);
@@ -116,7 +116,7 @@ public class Parser : GameParser
     
     private static MoveResult ParseSingleDisambiguatedPieceMove(string move, Board board)
     {
-        (int file, int rank) target = Utils.ParseSquare(move[2..]);
+        (int file, int rank) target = ParseSquare(move[2..]);
         byte piece = Parse(move[0]);
         
         // file disambiguation
@@ -165,7 +165,7 @@ public class Parser : GameParser
             return ParseRegularPieceMove(move[0] + move[2..], board);
         
         // pawn capture
-        (int File, int rank) target = Utils.ParseSquare(move[2..]);
+        (int File, int rank) target = ParseSquare(move[2..]);
         (int File, int rank) source = (move[0].AsFile(), target.rank + board.turn * 2 - 1);
 
         int trg = target.GetIndex();
@@ -182,7 +182,7 @@ public class Parser : GameParser
     
     private static MoveResult ParseRegularPieceMove(string move, Board board)
     {
-        (int File, int rank) target = Utils.ParseSquare(move[1..]);
+        (int File, int rank) target = ParseSquare(move[1..]);
         byte piece = Parse(move[0]);
 
         MovingPiece pieceData = FindMovingPiece(board, target, piece);
@@ -262,7 +262,7 @@ public class Parser : GameParser
 
     private static MoveResult ParseSinglePawnMove(string move, Board board)
     {
-        (int file, int rank) target = Utils.ParseSquare(move);
+        (int file, int rank) target = ParseSquare(move);
         (int file, int rank) source = OffsetSquare(target, yOffset: board.turn == 0 ? -1 : 1);
                 
         bool doubleMove = TypeOf(board[source]) != WPawn;
