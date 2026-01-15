@@ -1,6 +1,33 @@
+using MiniPGN.Chess.Board_Representation;
+
 namespace MiniPGN.Minimizer;
 
-public abstract class Decoder
+public abstract class Decoder(IEnumerator<byte> file)
 {
-    
+    public virtual string ParseGame(Board board)
+    {
+        List<string> fullGame = new();
+        int moves = 1;
+        
+        do
+        {
+            if (++moves % 2 == 0)
+                fullGame.Add($"{moves}.");
+
+            MoveResult move = ParseNextMove(board);
+            
+            board.MakeMove(move.Move);
+            fullGame.Add(move.Str);
+        } while (file.Current != 0xFF);
+
+        return string.Join(' ', fullGame);
+    }
+
+    protected abstract MoveResult ParseNextMove(Board board);
+
+    protected readonly struct MoveResult(Move move, string str)
+    {
+        public readonly Move Move = move;
+        public readonly string Str = str;
+    }
 }

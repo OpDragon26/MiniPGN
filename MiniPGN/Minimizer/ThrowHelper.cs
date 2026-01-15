@@ -33,3 +33,10 @@ public class MetadataExtractionException : MiniPGNException
     public MetadataExtractionException(string message) : base(message) { }
     public MetadataExtractionException(string message, Exception inner) : base(message, inner) { }
 }
+
+public class MoveDecodingException : MiniPGNException
+{
+    public MoveDecodingException() { }
+    public MoveDecodingException(string message) : base(message) { }
+    public MoveDecodingException(string message, Exception inner) : base(message, inner) { }
+}

@@ -2,11 +2,11 @@ namespace MiniPGN.Minimizer.Standard;
 using Parsing;
 using Minimizer;
 
-public class Standard(Version version) : Minimizer.EncodingHandler(version)
+public class Standard(Version version) : EncodingHandler(version)
 {
     private static readonly Encoder Encoder = new();
     
-    public override byte[] Encode(EncoderProfile profile, string fileName = "Result.mpgn")
+    public override byte[] Encode(EncoderProfile profile)
     {
         List<byte> byteList = new();
         ulong games = 0;
@@ -24,7 +24,7 @@ public class Standard(Version version) : Minimizer.EncodingHandler(version)
                     byteList.Add(0xFF);
                 byteList.AddRange(Encoder.ParseGame(line));
                 
-                if ((byteList[^1] & 0b11100111) == 11100111)
+                if ((byteList[^1] & 0b11100111) != 0b11100111)
                     byteList.Add(0xFF);
                 
                 games++;
