@@ -90,6 +90,7 @@ public static class DecodeHelper
         }
 
         file.MoveNext();
+        Console.WriteLine(file.Current);
     }
     
     private static string ExtractDate(IEnumerator<byte> file)

@@ -39,4 +39,9 @@ public static class Utils
     {
         return Encoding.Latin1.GetChars([b])[0];
     }
+
+    public static (int file, int rank) GetFileRank(this byte b)
+    {
+        return ((b >> 3) & 0b111, b & 0b111);
+    }
 }

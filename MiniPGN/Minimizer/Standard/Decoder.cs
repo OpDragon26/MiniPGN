@@ -1,4 +1,5 @@
 using MiniPGN.Chess.Board_Representation;
+using MiniPGN.Parsing;
 
 namespace MiniPGN.Minimizer.Standard;
 
@@ -6,7 +7,31 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
 {
     protected override MoveResult ParseNextMove(Board board)
     {
-        throw new NotImplementedException();
+        return GetMoveType(File.Current) switch
+        {
+            Type.Control => ParseControl(File),
+            Type.Pawn => ParseSimplePawnMove(File, board),
+            _ => throw new Exception("No")
+        };
+    }
+
+    private MoveResult ParseSimplePawnMove(IEnumerator<byte> file, Board board)
+    {
+        byte b = file.Next();
+    }
+    
+    private MoveResult ParseControl(IEnumerator<byte> file)
+    {
+        string? controlStr = (int)file.Next() switch
+        {
+            0x11100111 => "1/2-1/2",
+            0x11110111 => "1-0",
+            0x11101111 => "0-1",
+            0x11111111 => null,
+            _ => throw new Exception("No")
+        };
+
+        return new(null, controlStr);
     }
 
     private Type GetMoveType(byte first)
