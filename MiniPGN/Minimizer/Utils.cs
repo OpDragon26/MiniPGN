@@ -39,4 +39,9 @@ public static class Utils
     {
         return Encoding.Latin1.GetChars([b])[0];
     }
+
+    public static string GetBinaryString(this byte b)
+    {
+        return Convert.ToString(b, 2).PadLeft(8, '0');
+    }
 }

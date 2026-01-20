@@ -15,12 +15,19 @@ public abstract class Decoder(IEnumerator<byte> file)
                 fullGame.Add($"{moves}.");
 
             MoveResult move = ParseNextMove(board);
+
+            Console.WriteLine(move.Str);
             
             board.MakeMove(move.Move);
             fullGame.Add(move.Str);
         } while (file.Current != 0xFF);
 
         return string.Join(' ', fullGame);
+    }
+
+    public string ParseGame()
+    {
+        return ParseGame(Board.NewStartingBoard());
     }
 
     protected abstract MoveResult ParseNextMove(Board board);
