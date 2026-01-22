@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace MiniPGN.Minimizer;
 
 public abstract class EncodingHandler(Version version)

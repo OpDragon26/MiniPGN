@@ -6,7 +6,7 @@ public abstract class Decoder(IEnumerator<byte> file)
 {
     protected readonly IEnumerator<byte> File = file;
     
-    public virtual string ParseGame(Board board)
+    protected virtual string ParseGame(Board board)
     {
         List<string> fullGame = new();
         int moves = 1;

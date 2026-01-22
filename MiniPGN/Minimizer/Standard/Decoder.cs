@@ -1,15 +1,12 @@
 using MiniPGN.Chess;
 using MiniPGN.Chess.Board_Representation;
 using MiniPGN.Parsing;
-using static MiniPGN.Parsing.Utils;
 using static MiniPGN.Parsing.DisambiguationUtils;
 
 namespace MiniPGN.Minimizer.Standard;
 
 public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
 {
-    private readonly IEnumerator<byte> File = file;
-    
     protected override MoveResult ParseNextMove(Board board)
     {
         Sign moveSign = GetMoveSign(File.Current);
