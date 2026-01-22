@@ -28,4 +28,16 @@ public static class Utils
     {
         return Files.Contains(f);
     }
+
+    public static char ToFile(this byte f)
+    {
+        return Files[f];
+    }
+
+    public static (int file, int rank) AsSquare(this byte b)
+    {
+        int file = (b >> 3) & 0b111;
+        int rank = b & 0b111;
+        return (file, rank);
+    }
 }

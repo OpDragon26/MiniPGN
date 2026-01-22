@@ -42,12 +42,31 @@ public class Standard(Version version) : EncodingHandler(version)
         file.MoveNext();
 
         DecodeResult result = DecodeHelper.ExtractMetadata(file);
+
+        result.Result = result.Profile.metadataHandling == Metadata.Exclude
+            ? ParseGamesWithoutMetadata(file)
+            : ParseGamesWithMetadata(file);
         
         file.Dispose();
         
         Console.WriteLine(result);
         
         return result;
+    }
+
+    private IEnumerable<string> ParseGamesWithoutMetadata(IEnumerator<byte> file)
+    {
+        Decoder d = new(file);
+        
+        do
+        {
+            yield return d.ParseGame();
+        } while (file.Current != 0xFF);
+    }
+
+    private IEnumerable<string> ParseGamesWithMetadata(IEnumerator<byte> file)
+    {
+        throw new NotImplementedException();
     }
     
     private List<byte> GetMetadata(EncoderProfile profile, ulong numberOfGames = 0)

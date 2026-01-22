@@ -3,6 +3,9 @@ namespace MiniPGN.Chess;
 public static class Utils
 {
     private static readonly Random Random = new();
+    private static readonly char[] Files = ['a','b','c','d','e','f','g','h'];
+    private static readonly char[] Ranks = ['1','2','3','4','5','6','7','8'];
+    
     public static ulong RandomUlong()
     {
         return (ulong)Random.Next() * (ulong)Random.Next();
@@ -61,5 +64,13 @@ public static class Utils
     public static (int file, int rank) OffsetBy(this (int file, int rank) square, (int file, int rank) other, int multiplier = 1)
     {
         return (square.file + other.file * multiplier, square.rank + other.rank * multiplier);
+    }
+
+    public static string SquareString(this (int file, int rank) square)
+    {
+        char f = Files[square.file];
+        char r = Ranks[square.rank];
+
+        return $"{f}{r}";
     }
 }

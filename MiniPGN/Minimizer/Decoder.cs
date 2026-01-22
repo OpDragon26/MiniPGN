@@ -17,6 +17,8 @@ public abstract class Decoder(IEnumerator<byte> file)
                 fullGame.Add($"{moves}.");
 
             MoveResult move = ParseNextMove(board);
+
+            Console.WriteLine(move.Str);
             
             if (move.Move is not null)
                 board.MakeMove(move.Move);
@@ -25,6 +27,11 @@ public abstract class Decoder(IEnumerator<byte> file)
         } while (File.Current != 0xFF);
 
         return string.Join(' ', fullGame);
+    }
+
+    public string ParseGame()
+    {
+        return ParseGame(Board.NewStartingBoard());
     }
 
     protected abstract MoveResult ParseNextMove(Board board);

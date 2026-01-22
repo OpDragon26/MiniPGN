@@ -45,8 +45,8 @@ public readonly struct Version(byte major, byte minor) : IEquatable<Version>
 
 public class DecodeResult(EncoderProfile profile, IEnumerable<string> result, Version version, string encodeDate = "", string gameCount = "")
 {
-    private readonly EncoderProfile Profile = profile;
-    private readonly IEnumerable<string> Result = result;
+    public readonly EncoderProfile Profile = profile;
+    public IEnumerable<string> Result = result;
     private readonly string EncodeDate = encodeDate;
     private readonly string GameCount = gameCount;
     private readonly Version Version = version;
