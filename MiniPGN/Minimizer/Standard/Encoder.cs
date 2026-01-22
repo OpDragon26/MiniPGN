@@ -1,10 +1,10 @@
 using MiniPGN.Chess;
-using MiniPGN.Chess.Bitboards;
 using MiniPGN.Chess.Parsing;
 using MiniPGN.Chess.Board_Representation;
 using MiniPGN.Parsing;
 using static MiniPGN.Chess.Board_Representation.Pieces;
 using static MiniPGN.Parsing.Utils;
+using static MiniPGN.Parsing.DisambiguationUtils;
 
 namespace MiniPGN.Minimizer.Standard;
 
@@ -194,70 +194,6 @@ public class Encoder : Minimizer.Encoder
             : [(byte)(0b1110_0000 | piece), target.ToByte()];
 
         return new MoveResult(bytes, foundMove);
-    }
-    
-    private static MovingPiece FindMovingPiece(Board board, (int file, int rank) target, byte piece, Disambiguation d = Disambiguation.None, int dNum = 0)
-    {
-        if (d == Disambiguation.None)
-        {
-            ulong allPieces = FindMovingPieceBitboard(board, target);
-            if (ulong.PopCount(allPieces) == 1)
-                return new MovingPiece(Chess.Bitboards.Utils.FindFileRankFromBitboard(allPieces), true);   
-        }
-
-        ulong specifiedPieces = FindMovingPieceBitboard(board, target, piece);
-        
-        if (d == Disambiguation.File)
-            specifiedPieces &= Chess.Bitboards.Utils.GetFile(dNum);
-        else if (d == Disambiguation.Rank)
-            specifiedPieces &= Chess.Bitboards.Utils.GetRank(dNum);
-        
-        if (ulong.PopCount(specifiedPieces) == 1)
-            return new MovingPiece(Chess.Bitboards.Utils.FindFileRankFromBitboard(specifiedPieces), false);
-
-        if (ulong.PopCount(specifiedPieces) == 0)
-            throw new NotationParsingException("Could not find moving piece");
-        throw new NotationParsingException("Insufficient disambiguation");
-    }
-
-    private struct MovingPiece((int file, int rank) source, bool freePiece)
-    {
-        public readonly (int file, int rank) Source = source;
-        public readonly bool FreePiece = freePiece;
-    }
-
-    private static ulong FindMovingPieceBitboard(Board board, (int file, int rank) target, byte piece)
-    {
-        int targetSquare = target.GetIndex();
-        
-        return TypeOf(piece) switch
-        {
-            WKnight => Masks.KnightMasks[targetSquare] & board.GetBitboard(board.turn, WKnight),
-            WBishop => MagicLookup.Lookup.BishopBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WBishop),
-            WRook => MagicLookup.Lookup.RookBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WRook),
-            WQueen => MagicLookup.Lookup.QueenBitboards(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WQueen),
-            WKing => Masks.KingMasks[targetSquare] & board.GetBitboard(board.turn, WKing),
-            _ => throw new NotationParsingException($"Could not find moving bitboard of piece {piece}")
-        };
-    }
-
-    private static ulong FindMovingPieceBitboard(Board board, (int file, int rank) target)
-    {
-        int targetSquare = target.GetIndex();
-
-        return (Masks.KnightMasks[targetSquare] & board.GetBitboard(board.turn, WKnight))
-               | (MagicLookup.Lookup.BishopBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WBishop))
-               | (MagicLookup.Lookup.RookBitboard(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WRook))
-               | (MagicLookup.Lookup.QueenBitboards(targetSquare, board.AllPieces()) & board.GetBitboard(board.turn, WQueen))
-               | (Masks.KingMasks[targetSquare] & board.GetBitboard(board.turn, WKing));
-    }
-    
-    private enum Disambiguation
-    {
-        None,
-        File,
-        Rank,
-        Double
     }
 
     private static MoveResult ParseSinglePawnMove(string move, Board board)

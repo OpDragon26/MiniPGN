@@ -127,6 +127,12 @@ public class Board(PieceBoard board, Bitboard bitboards, int turn)
         set => board[GetIndex(square.file, square.rank)] = value;
     }
 
+    public bool Occupied((int file, int rank) square)
+    {
+        ulong s = square.Bitboard();
+        return (s & AllPieces()) != 0;
+    }
+
     public Board Clone()
     {
         return new Board(board, bitboards, turn);

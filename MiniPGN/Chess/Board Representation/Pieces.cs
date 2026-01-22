@@ -30,15 +30,20 @@ public static class Pieces
 
     public static byte Parse(char p)
     {
-        return pieceDict[p];
+        return PieceDict[p];
+    }
+
+    public static char ToPiece(this byte b)
+    {
+        return PieceArray[b];
     }
 
     public static bool IsPiece(char p)
     {
-        return pieceDict.ContainsKey(p);
+        return PieceDict.ContainsKey(p);
     }
 
-    private static readonly Dictionary<char, byte> pieceDict = new()
+    private static readonly Dictionary<char, byte> PieceDict = new()
     {
         { 'P' , WPawn },
         { 'N' , WKnight },
@@ -54,4 +59,6 @@ public static class Pieces
         { 'q' , BQueen },
         { 'k' , BKing },
     };
+
+    private static readonly char[] PieceArray = ['?', '?', 'N', 'B', 'R', 'Q', 'K'];
 }

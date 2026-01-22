@@ -2,6 +2,7 @@ using MiniPGN.Chess;
 using MiniPGN.Chess.Board_Representation;
 using MiniPGN.Parsing;
 using static MiniPGN.Parsing.Utils;
+using static MiniPGN.Parsing.DisambiguationUtils;
 
 namespace MiniPGN.Minimizer.Standard;
 
@@ -16,8 +17,29 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
         return moveSign switch
         {
             Sign.Pawn => ParsePawnMove(board),
+            Sign.SingleSource => ParseSingleSourceMove(board),
             _ => throw new NotImplementedException()
         };
+    }
+
+    private MoveResult ParseSingleSourceMove(Board board)
+    {
+        byte b = File.Next();
+        (int file, int rank) target = b.AsSquare();
+        
+        // find source
+        MovingPiece pieceData = FindFreePiece(board, target);
+
+        int srcIndex = pieceData.Source.GetIndex();
+        int trgIndex = target.GetIndex();
+
+        char piece = pieceData.Piece.ToPiece();
+        bool capture = board.Occupied(target);
+        
+        Move move = new Move(srcIndex, trgIndex);
+        string moveStr = $"{piece}{(capture ? "x" : "")}{target.SquareString()}";
+
+        return new MoveResult(move, moveStr);
     }
 
     private MoveResult ParsePawnMove(Board board)
@@ -29,7 +51,7 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
         int offset = board.turn * 2 - 1;
         
         // can be forward or capture from lower file
-        if ((b & 0x0100_000) == 0)
+        if ((b & 0b0100_0000) == 0)
         {
             if ((board.AllPieces() & targetBitboard) == 0) // forward move
             {
@@ -60,7 +82,7 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
                 return new MoveResult(moveObj, moveStr);
             }
         }
-        // capture from higher file
+        else // capture from higher file
         {
             (int file, int rank) source = target.OffsetBy((1, -offset));
                 
