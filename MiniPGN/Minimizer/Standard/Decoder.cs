@@ -1,5 +1,6 @@
 using MiniPGN.Chess;
 using MiniPGN.Chess.Board_Representation;
+using MiniPGN.Chess.Parsing;
 using MiniPGN.Parsing;
 using static MiniPGN.Parsing.DisambiguationUtils;
 
@@ -7,9 +8,15 @@ namespace MiniPGN.Minimizer.Standard;
 
 public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
 {
-    protected override MoveResult ParseNextMove(Board board)
+    protected override MoveResult ParseNextMove(Board board, bool log = false)
     {
         Sign moveSign = GetMoveSign(File.Current);
+
+        if (log)
+        {
+            Console.WriteLine(Display.GetBoardString(board));
+            Console.WriteLine(moveSign);
+        }
         
         return moveSign switch
         {
@@ -66,8 +73,8 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
         (int file, int rank) target = bytes[1].AsSquare();
         MovingPiece pieceData = FindMovingPiece(board, target, piece);
 
-        int srcIndex = target.GetIndex();
-        int trgIndex = pieceData.Source.GetIndex();
+        int trgIndex = target.GetIndex();
+        int srcIndex = pieceData.Source.GetIndex();
 
         if (IsCastling(pieceData.Source, target, piece))
         {
@@ -116,7 +123,7 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
         int srcIndex = source.GetIndex();
         int trgIndex = target.GetIndex();
 
-        Move move = new Move(srcIndex, trgIndex, piece, Flag.Promotion);
+        Move move = new Move(srcIndex, trgIndex, (byte)(piece | (board.turn << 3)), Flag.Promotion);
         string moveStr = capture
             ? $"{srcFile.ToFile()}x{target.SquareString()}={piece.ToPiece()}"
             : $"{target.SquareString()}={piece.ToPiece()}";
@@ -159,10 +166,10 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
             {
                 ulong pawns = board.GetBitboard(board.turn, Pieces.WPawn);
 
-                (int file, int rank) source = target.OffsetBy((0, -offset));
+                (int file, int rank) source = target.OffsetBy((0, offset));
                 if ((pawns & source.Bitboard()) == 0)
-                    source = source.OffsetBy((0, -offset));
-
+                    source = source.OffsetBy((0, offset));
+                
                 int srcIndex = source.GetIndex();
                 int trgIndex = target.GetIndex();
 
@@ -173,20 +180,20 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
             }
             else // capture from lower file
             {
-                (int file, int rank) source = target.OffsetBy((-1, -offset));
+                (int file, int rank) source = target.OffsetBy((-1, offset));
                 
                 int srcIndex = source.GetIndex();
                 int trgIndex = target.GetIndex();
                 
-                Move moveObj = new Move(srcIndex, trgIndex);
+                Move move = new Move(srcIndex, trgIndex);
                 string moveStr = $"{((byte)source.file).ToFile()}x{target.SquareString()}";
                 
-                return new MoveResult(moveObj, moveStr);
+                return new MoveResult(move, moveStr);
             }
         }
         else // capture from higher file
         {
-            (int file, int rank) source = target.OffsetBy((1, -offset));
+            (int file, int rank) source = target.OffsetBy((1, offset));
                 
             int srcIndex = source.GetIndex();
             int trgIndex = target.GetIndex();

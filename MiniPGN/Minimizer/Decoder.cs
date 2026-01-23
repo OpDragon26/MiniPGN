@@ -34,7 +34,7 @@ public abstract class Decoder(IEnumerator<byte> file)
         return ParseGame(Board.NewStartingBoard());
     }
 
-    protected abstract MoveResult ParseNextMove(Board board);
+    protected abstract MoveResult ParseNextMove(Board board, bool log = false);
 
     protected readonly struct MoveResult(Move? move, string? str)
     {
