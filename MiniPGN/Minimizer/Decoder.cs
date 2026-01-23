@@ -6,7 +6,7 @@ public abstract class Decoder(IEnumerator<byte> file)
 {
     protected readonly IEnumerator<byte> File = file;
     
-    protected virtual string ParseGame(Board board)
+    protected virtual string ParseGame(Board board, bool log = false)
     {
         List<string> fullGame = new();
         int moves = 1;
@@ -18,7 +18,8 @@ public abstract class Decoder(IEnumerator<byte> file)
 
             MoveResult move = ParseNextMove(board);
 
-            Console.WriteLine(move.Str);
+            if (log)
+                Console.WriteLine(move.Str);
             
             if (move.Move is not null)
                 board.MakeMove(move.Move);
