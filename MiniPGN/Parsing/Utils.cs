@@ -33,6 +33,11 @@ public static class Utils
     {
         return Files[f];
     }
+    
+    public static char ToFile(this int f)
+    {
+        return Files[f];
+    }
 
     public static (int file, int rank) AsSquare(this byte b)
     {

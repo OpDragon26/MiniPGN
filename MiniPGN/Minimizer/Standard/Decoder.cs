@@ -15,8 +15,32 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
         {
             Sign.Pawn => ParsePawnMove(board),
             Sign.SingleSource => ParseSingleSourceMove(board),
+            Sign.Promotion => ParsePromotion(board),
             _ => throw new NotImplementedException()
         };
+    }
+
+    private MoveResult ParsePromotion(Board board)
+    {
+        byte[] bytes = File.Extract(2).ToArray();
+
+        byte piece = (byte)(bytes[0] & 0b111);
+
+        (int srcFile, int trgFile) = bytes[1].AsSquare();
+        bool capture = srcFile == trgFile;
+
+        (int file, int rank) source = (srcFile, board.turn == 0 ? 6 : 1);
+        (int file, int rank) target = (trgFile, board.turn == 0 ? 7 : 0);
+
+        int srcIndex = source.GetIndex();
+        int trgIndex = target.GetIndex();
+
+        Move move = new Move(srcIndex, trgIndex, piece, Flag.Promotion);
+        string moveStr = capture
+            ? $"{srcFile.ToFile()}x{target.SquareString()}={piece.ToPiece()}"
+            : $"{target.SquareString()}={piece.ToPiece()}";
+
+        return new MoveResult(move, moveStr);
     }
 
     private MoveResult ParseSingleSourceMove(Board board)
