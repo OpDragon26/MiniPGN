@@ -16,8 +16,53 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
             Sign.Pawn => ParsePawnMove(board),
             Sign.SingleSource => ParseSingleSourceMove(board),
             Sign.Promotion => ParsePromotion(board),
+            Sign.Undisambiguated => ParseUndisambiguatedMove(board),
             _ => throw new NotImplementedException()
         };
+    }
+
+    private MoveResult ParseUndisambiguatedMove(Board board)
+    {
+        byte[] bytes = File.Extract(2).ToArray();
+        
+        byte piece = (byte)(bytes[0] & 0b111);
+
+        (int file, int rank) target = bytes[1].AsSquare();
+        MovingPiece pieceData = FindMovingPiece(board, target, piece);
+
+        int srcIndex = target.GetIndex();
+        int trgIndex = pieceData.Source.GetIndex();
+
+        if (IsCastling(pieceData.Source, target, piece))
+        {
+            string moveStr = pieceData.Source.file < target.file
+                ? "O-O"
+                : "O-O-O";
+            Flag flag = pieceData.Source.file < target.file
+                ? (board.turn == 0 ? Flag.WhiteShortCastle : Flag.BlackShortCastle)
+                : (board.turn == 0 ? Flag.WhiteLongCastle : Flag.BlackLongCastle);
+            Move move = new Move(srcIndex, trgIndex, flag: flag);
+
+            return new MoveResult(move, moveStr);
+        }
+        else
+        {
+            bool capture = board.Occupied(target);
+            char pieceChar = piece.ToPiece();
+            
+            string moveStr = capture
+                ? $"{pieceChar}x{target.SquareString()}"
+                : $"{pieceChar}{target.SquareString()}";
+            Move move = new Move(srcIndex, trgIndex);
+
+            return new MoveResult(move, moveStr);
+        }
+    }
+
+    private bool IsCastling((int file, int rank) source, (int file, int rank) target, byte piece)
+    {
+        return Pieces.TypeOf(piece) == Pieces.WKing
+               && Math.Abs(source.file - target.file) > 1;
     }
 
     private MoveResult ParsePromotion(Board board)
