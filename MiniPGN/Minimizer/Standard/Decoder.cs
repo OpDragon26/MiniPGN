@@ -17,8 +17,44 @@ public class Decoder(IEnumerator<byte> file) : Minimizer.Decoder(file)
             Sign.SingleSource => ParseSingleSourceMove(board),
             Sign.Promotion => ParsePromotion(board),
             Sign.Undisambiguated => ParseUndisambiguatedMove(board),
+            Sign.Disambiguated => ParseDisambiguatedMove(board),
             _ => throw new NotImplementedException()
         };
+    }
+
+    private MoveResult ParseDisambiguatedMove(Board board)
+    {
+        byte[] bytes = File.Extract(3).ToArray();
+
+        Disambiguation disambiguation = ((bytes[0] >> 3) & 0b11) switch
+        {
+            0b10 => Disambiguation.File,
+            0b01 => Disambiguation.Rank,
+            0b11 => Disambiguation.Double,
+            _ => throw new NotationParsingException($"Disambiguation not recognized: {bytes[0].GetBinaryString()}")
+        };
+
+        byte piece = (byte)(bytes[0] & 0b111);
+        
+        (int file, int rank) source = bytes[1].AsSquare();
+        (int file, int rank) target = bytes[2].AsSquare();
+
+        int srcIndex = source.GetIndex();
+        int trgIndex = target.GetIndex();
+
+        bool capture = board.Occupied(target);
+        
+        Move move = new Move(srcIndex, trgIndex);
+        string disaStr = disambiguation switch
+        {
+            Disambiguation.File => source.file.ToFile().ToString(),
+            Disambiguation.Rank => (source.rank + 1).ToString(),
+            Disambiguation.Double => source.SquareString(),
+            _ => throw new Exception("no")
+        };
+        string moveStr = $"{piece.ToPiece()}{disaStr}{(capture ? "x" : "")}{target.SquareString()}";
+
+        return new MoveResult(move, moveStr);
     }
 
     private MoveResult ParseUndisambiguatedMove(Board board)
