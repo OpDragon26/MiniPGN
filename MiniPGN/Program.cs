@@ -4,14 +4,14 @@ using Type = MiniPGN.Minimizer.Type;
 
 Init.Start();
 
-byte[] byteFile = EncodingHandler.Active.Encode(new(Type.Standard, Metadata.Exclude, true, true)
+byte[] byteFile = EncodingHandler.Active.Encode(new(Type.Standard, Metadata.Include, true, true)
 {
     file =
     [
         "[Event \"Rated Blitz game\"]",
         "[Site \"https://lichess.org/n3p0bgc7\"]",
+        "[Round \"1122\"]",
         "[White \"georgek\"]",
-        "[Black \"b777\"]",
         "[Black \"TheWeebles\"]",
         "[Result \"1-0\"]",
         "[UTCDate \"2012.12.31\"]",

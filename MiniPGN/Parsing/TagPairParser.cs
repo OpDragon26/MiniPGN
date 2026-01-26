@@ -247,8 +247,8 @@ public static class TagPairParser
             
             foreach (byte b in time.ToByteArray())
                 yield return b;
-            yield return 0;
-            yield return 0;
+            yield return 0xF0;
+            yield return 0xF0;
         }
         else
         {
