@@ -23,9 +23,68 @@ public static class TagPairDecoder
                 0x09 => ParseDateTag(file, true),
                 0x0A => ParseTimeTag(file),
                 0x0B => ParseTimeControlTag(file),
+                0x0C => ParseEloTags(file, "White"),
+                0x0D => ParseEloTags(file, "Black"),
+                0x0E => ParseRatingDiffTags(file, "White"),
+                0x0F => ParseRatingDiffTags(file, "Black"),
+                0x10 => ParseECOCode(file),
+                0x11 => ParseOpeningTag(file),
+                0x12 => ParseTerminationTag(file), 
                 _ => throw new TagNotRecognizedException($"Unknown tag: {tag}")
             };
         }
+    }
+
+    private static string ParseTerminationTag(IEnumerator<byte> file)
+    {
+        byte tag = file.Next();
+
+        string value = tag switch
+        {
+            0x01 => file.ExtractNullTerminatedString(),
+            0x02 => "Normal",
+            0x03 => "Time forfeit",
+            0x04 => "Abandoned",
+            0x05 => "Adjudication",
+            0x06 => "Death",
+            0x07 => "Emergency",
+            0x08 => "Rules infraction",
+            0x09 => "Unterminated",
+            _ => throw new TagNotRecognizedException($"Unknown termination tag: {tag}")
+        };
+        
+        return GenTagPair("Termination", value);
+    }
+
+    private static string ParseOpeningTag(IEnumerator<byte> file)
+    {
+        string value = file.ExtractNullTerminatedString();
+        return GenTagPair("Opening", value);
+    }
+    
+    private static readonly char[] ECOLetters = ['A','B','C','D','E'];
+    private static string ParseECOCode(IEnumerator<byte> file)
+    {
+        byte[] bytes = file.Extract(2).ToArray();
+
+        char letter = ECOLetters[bytes[0]];
+        string value = letter + bytes[1].ToString();
+        
+        return GenTagPair("ECO", value);
+    }
+
+    private static string ParseRatingDiffTags(IEnumerator<byte> file, string color)
+    {
+        byte[] bytes = file.Extract(2).ToArray();
+        short value = bytes.ToInt16();
+        return GenTagPair($"{color}RatingDiff", value.ToString());
+    }
+
+    private static string ParseEloTags(IEnumerator<byte> file, string color)
+    {
+        byte[] bytes = file.Extract(2).ToArray();
+        int value = BitConverter.ToUInt16(bytes);
+        return GenTagPair($"{color}Elo", value.ToString());
     }
 
     private static string ParseTimeControlTag(IEnumerator<byte> file)

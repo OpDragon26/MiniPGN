@@ -185,10 +185,10 @@ public static class TagPairParser
     private static readonly Dictionary<char, byte> ECOLetter = new()
     {
         {'A', 0},
-        {'B', 2},
-        {'C', 3},
-        {'D', 4},
-        {'E', 5},
+        {'B', 1},
+        {'C', 2},
+        {'D', 3},
+        {'E', 4},
     };
 
     private static IEnumerable<byte> ParseTermination(string tag)

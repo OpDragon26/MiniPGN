@@ -17,11 +17,14 @@ public static class Utils
         return nullTerminated ? bytes.Append<byte>(0) : bytes;
     }
 
+    public static short ToInt16(this byte[] bytes)
+    {
+        return BitConverter.ToInt16(bytes, 0);
+    }
+
     public static byte[] ToByteArray(this short value)
     {
         byte[] bytes = BitConverter.GetBytes(value);
-        if (BitConverter.IsLittleEndian)
-            Array.Reverse(bytes);
         return bytes;
     }
 
