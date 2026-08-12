@@ -1,0 +1,817 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ChessLib</name>
+    </assembly>
+    <members>
+        <member name="M:ChessLib.API.Display.BitboardDisplay.GetBitboardString(System.UInt64,ChessLib.API.Display.Formatting.BitFormat,System.Int32)">
+            <summary>
+            Returns a string with the given formatting representing the bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.BitboardDisplay.GetBitboardString(System.UInt64,System.Int32)">
+            <summary>
+            Returns a string with the default formatting representing the bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.BitboardDisplay.PrintBitboard(System.UInt64,ChessLib.API.Display.Formatting.BitFormat,System.Int32)">
+            <summary>
+            Prints the given bitboard to the console using the given formatting
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.BitboardDisplay.PrintBitboard(System.UInt64,System.Int32)">
+            <summary>
+            Prints the given bitboard to the console using the default formatting
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.BoardDisplay.GetBoardString(ChessLib.Base.Board,ChessLib.API.Display.Formatting.PieceFormat,System.Int32,System.Boolean)">
+            <summary>
+            Returns a string with the given formatting representing the board
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.BoardDisplay.GetBoardString(ChessLib.Base.Board,System.Int32,System.Boolean)">
+            <summary>
+            Returns a string with the default formatting representing the board
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.BoardDisplay.PrintBoard(ChessLib.Base.Board,ChessLib.API.Display.Formatting.PieceFormat,System.Int32,System.Boolean)">
+            <summary>
+            Prints the board to the console with the given formatting
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.BoardDisplay.PrintBoard(ChessLib.Base.Board,System.Int32,System.Boolean)">
+            <summary>
+            Returns a string with the default formatting representing the board
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.DisplayUtils.ToAlgebraic(System.ValueTuple{System.Int32,System.Int32})">
+            <summary>
+            Converts a file-rank tuple into algebraic notation
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.DisplayUtils.ToAlgebraic(System.Int32)">
+            <summary>
+            Converts an index into algebraic notation
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.DisplayUtils.AsFile(System.Int32)">
+            <summary>
+            Returns the file char for a given file
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.DisplayUtils.AsRank(System.Int32)">
+            <summary>
+            Returns the rank char for a given file
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.DisplayUtils.GetFile(System.Char)">
+            <summary>
+            Returns the file index of a char
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.DisplayUtils.GetRank(System.Char)">
+            <summary>
+            Returns the rank index of a char
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.DisplayUtils.IsRankChar(System.Char)">
+            <summary>
+            Returns true if the char represents 1-8
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.DisplayUtils.IsFileChar(System.Char)">
+            <summary>
+            Returns true if the char represents a-h
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.Formatting.DefaultFormatting.GetOSDefault">
+            <summary>
+            Returns the default formatting for the current OS's terminal
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.Formatting.DefaultFormatting.GetOSLight">
+            <summary>
+            Returns the default light formatting for the current OS's terminal
+            </summary>
+        </member>
+        <member name="T:ChessLib.API.Display.Formatting.PieceFormat">
+            <summary>
+            Specifies how to convert a board into a string
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.Formatting.PieceFormat.#ctor(System.Char[],System.ConsoleColor,System.ConsoleColor,System.ConsoleColor)">
+            <summary>
+            Specifies how to convert a board into a string
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.Formatting.PieceFormat.FormatPiece(System.Byte)">
+            <summary>
+            Returns the corresponding piece char
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.Formatting.PieceFormat.GetColorAt(System.Int32)">
+            <summary>
+            Returns the color of the board at the given square
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Display.Formatting.PieceFormat.GetColorAt(ChessLib.API.Generic.Coordinate)">
+            <summary>
+            Returns the color of the board at the given square
+            </summary>
+        </member>
+        <member name="T:ChessLib.API.Generic.Coordinate">
+            <summary>
+            Stores a coordinate with the perspective in mind
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Generic.Coordinate.#ctor(ChessLib.API.Generic.Perspective,System.Int32,System.Int32)">
+            <summary>
+            Stores a coordinate with the perspective in mind
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Generic.Coordinate.AsTuple">
+            <summary>
+            Returns the coordinate as an objective tuple
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Generic.Coordinate.AsIndex">
+            <summary>
+            Returns the coordinate as an objective index
+            </summary>
+        </member>
+        <member name="T:ChessLib.API.Generic.Game">
+            <summary>
+            Contains the move and board at every step in a game of chess
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Generic.Game.#ctor(ChessLib.Base.Board)">
+            <summary>
+            Contains the move and board at every step in a game of chess
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Generic.Game.AddMove(ChessLib.Base.Move)">
+            <summary>
+            Adds a move to the game
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Generic.Game.AddMove(System.String)">
+            <summary>
+            Parses the move provided according to algebraic notation and adds it to the game
+            </summary>
+        </member>
+        <member name="T:ChessLib.API.Generic.Node">
+            <summary>
+            Contains a board and the move made on it during a game
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Generic.Node.#ctor(ChessLib.Base.Board,ChessLib.Base.Move)">
+            <summary>
+            Contains a board and the move made on it during a game
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Parsing.AlgebraicParsing.ParseMove(ChessLib.Base.Board,System.String)">
+            <summary>
+            Returns the Move object corresponding to the given move in Standard Algebraic Notation on the given board **Does not accurately check for legal moves
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Parsing.FEN.ParseFEN(System.String)">
+            <summary>
+            Parse a FEN string and return a board
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Parsing.GameParsing.StripMoves(System.String)">
+            <summary>
+            Removes the move indicator numbers from a game string and returns the moves as a list
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Parsing.ParsingUtils.ParseSquare(System.String)">
+            <summary>
+            Parse algebraic square notation to a file-rank tuple
+            </summary>
+            <example>
+            "e4" -> (4, 3)
+            </example>
+        </member>
+        <member name="T:ChessLib.API.Parsing.ParsingUtils.FinderMask">
+            <summary>
+            Contains information necessary for finding a piece that could move to a given square
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Parsing.ParsingUtils.FinderMask.#ctor(System.UInt64,System.Byte,System.Int32)">
+            <summary>
+            Contains information necessary for finding a piece that could move to a given square
+            </summary>
+        </member>
+        <member name="T:ChessLib.API.Parsing.ParsingUtils.Disambiguation">
+            <summary>
+            Type of disambiguation
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Parsing.ParsingUtils.GetFinderMask(ChessLib.Base.Board,System.Byte,System.Int32)">
+            <summary>
+            Calculates information necessary for finding a piece that could move to a given square
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Parsing.ParsingUtils.FindMovingPiece(ChessLib.Base.Board,ChessLib.API.Parsing.ParsingUtils.FinderMask,ChessLib.API.Parsing.ParsingUtils.Disambiguation,System.Int32)">
+            <summary>
+            Uses a finder mask to figure out which piece can move to the given location
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Parsing.PieceParsing.ParsePiece(System.Char,ChessLib.API.Display.Formatting.PieceFormat)">
+            <summary>
+            Finds the byte code of the piece based on the given formatting
+            </summary>
+        </member>
+        <member name="M:ChessLib.API.Parsing.PieceParsing.ParsePiece(System.Char)">
+            <summary>
+            Finds the byte code of the piece based on algebraic formatting
+            </summary>
+        </member>
+        <member name="T:ChessLib.Base.Bitboard">
+            <summary>
+            Stores piece positions as bitboards for each side, using the piece code as the index
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Board.Clone">
+            <summary>
+            Returns a board with the exact same position 
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Board.MakeMove(ChessLib.Base.Move)">
+            <summary>
+            Makes the given move on the board
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Board.UnmakeMove(ChessLib.Base.UnMove)">
+            <summary>
+            Reverses the last made move based on an UnMove
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Board.GenerateUnMove(ChessLib.Base.Move)">
+            <summary>
+            Generates an UnMove, used to reverse the last made move
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Board.AutoInit">
+            <summary>
+            Automatically fills in bitboards and the king's position based on the given piecewise board
+            </summary>
+        </member>
+        <member name="T:ChessLib.Base.CastlingRights">
+            <summary>
+            Stores the long and short castling rights for each side
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.CastlingRights.#ctor(System.Byte)">
+            <summary>
+            Stores the long and short castling rights for each side
+            </summary>
+        </member>
+        <member name="T:ChessLib.Base.Move">
+            <summary>
+            Contains all information necessary to make a move
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Move.#ctor(System.Int32,System.Int32,System.Byte,ChessLib.Base.Flag)">
+            <summary>
+            Contains all information necessary to make a move
+            </summary>
+        </member>
+        <member name="T:ChessLib.Base.Flag">
+            <summary>
+            A flag to represent types of moves
+            </summary>
+        </member>
+        <member name="T:ChessLib.Base.Pieces">
+            <summary>
+            Byte constants representing pieces
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.WPawn">
+            <summary>
+            White pawn: 0010 = 2
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.BPawn">
+            <summary>
+            black pawn: 0011 = 3
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.WKnight">
+            <summary>
+            White knight: 0100 = 4
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.BKnight">
+            <summary>
+            Black knight: 0101 = 5
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.WBishop">
+            <summary>
+            White bishop: 0110 = 6
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.BBishop">
+            <summary>
+            Black bishop: 0111 = 7
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.WRook">
+            <summary>
+            White rook: 1000 = 8
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.BRook">
+            <summary>
+            Black rook: 1001 = 9
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.WQueen">
+            <summary>
+            White queen: 1010 = 10
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.BQueen">
+            <summary>
+            Black queen: 1011 = 11
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.WKing">
+            <summary>
+            White king: 1100 = 12
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.BKing">
+            <summary>
+            Black king: 1101 = 13
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.Pawn">
+            <summary>
+            Pawn (type): 001 = 1
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.Knight">
+            <summary>
+            Knight (type): 010 = 2
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.Bishop">
+            <summary>
+            Bishop (type): 011 = 3
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.Rook">
+            <summary>
+            Rook (type): 100 = 4
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.Queen">
+            <summary>
+            Queen (type): 101 = 5
+            </summary>
+        </member>
+        <member name="F:ChessLib.Base.Pieces.King">
+            <summary>
+            King (type): 110 = 6
+            </summary>
+        </member>
+        <member name="T:ChessLib.Base.PiecewiseBoard">
+            <summary>
+            Stores the pieces as they appear on the board, starting at a1
+            </summary>
+        </member>
+        <member name="T:ChessLib.Base.UnMove">
+            <summary>
+            Contains all information necessary to reverse a move
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.UnMove.#ctor(System.Int32,System.Int32,System.Byte,System.Int32,System.Boolean,ChessLib.Base.Flag)">
+            <summary>
+            Contains all information necessary to reverse a move
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Utils.BaseUtils.GetOffset(System.Int32)">
+            <summary>
+            Returns the y offset for motion towards the back rank of each side (-1 for white, 1 for black)
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Utils.BaseUtils.Switch(System.Int32)">
+            <summary>
+            Switches between 1 and 0
+            </summary>
+        </member>
+        <member name="T:ChessLib.Base.Utils.MutableValuePair`1">
+            <summary>
+            Tuple with white and black except mutable
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Utils.MutableValuePair`1.#ctor(`0,`0)">
+            <summary>
+            Tuple with white and black except mutable
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Utils.PieceUtils.Type(System.Byte)">
+            <summary>
+            Returns the type based on objective value
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Utils.PieceUtils.IsType(System.Byte,System.Byte)">
+            <summary>
+            Checks whether an objective value is of a given type
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Utils.PieceUtils.Color(System.Byte)">
+            <summary>
+            Returns the color of the piece
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Utils.PieceUtils.AsColor(System.Byte,System.Int32)">
+            <summary>
+            Returns a piece of a given color given a type
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Utils.PieceUtils.SetColor(System.Byte,System.Int32)">
+            <summary>
+            Returns a piece of a given color given an objective value
+            </summary>
+        </member>
+        <member name="T:ChessLib.Bitboards.Combinations">
+            <summary>
+            Requires Masks to be initialized first
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Combinations.Init">
+            <summary>
+            Initializes combinations. Requires Masks to be initialized first
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Combinations.GetCombinations(System.UInt64)">
+            <summary>
+            Returns an array of all possible combination of bits in places where the bit of the mask is 1 using PDEP
+            </summary>
+            <example>
+            0b0110 -> [0b0000, 0b0010, 0b0100, 0b0110]
+            </example>
+        </member>
+        <member name="T:ChessLib.Bitboards.Masks">
+            <summary>
+            Contains all necessary masks as bitboards
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Masks.Init">
+            <summary>
+            Generates piece masks
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.ToBitboard(System.Int32)">
+            <summary>
+            Returns the given index represented as a bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.ToIndex(System.UInt64)">
+            <summary>
+            Returns the index represented by the single-square bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.ToBitboard(System.ValueTuple{System.Int32,System.Int32})">
+            <summary>
+            Returns the given file-rank tuple represented as a bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.SharesBits(System.UInt64,System.UInt64)">
+            <summary>
+            Returns whether the two bitboards have shared bits
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.Occupied(System.UInt64,System.Int32)">
+            <summary>
+            Returns whether the given index is turned to 1 on the bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.Occupied(System.UInt64,System.ValueTuple{System.Int32,System.Int32})">
+            <summary>
+            Returns whether the given index is turned to 1 on the bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.EnableBit(System.UInt64@,System.Int32)">
+            <summary>
+            Turns the given bit to 1 on the bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.DisableBit(System.UInt64@,System.Int32)">
+            <summary>
+            Turns the given bit to 0 on the bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.SwitchBit(System.UInt64@,System.Int32)">
+            <summary>
+            Switches (XORs) the given bit on the bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.EnableBit(System.UInt64@,System.ValueTuple{System.Int32,System.Int32})">
+            <summary>
+            Turns the given bit to 1 on the bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.DisableBit(System.UInt64@,System.ValueTuple{System.Int32,System.Int32})">
+            <summary>
+            Turns the given bit to 0 on the bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.SwitchBit(System.UInt64@,System.ValueTuple{System.Int32,System.Int32})">
+            <summary>
+            Switches (XORs) the given bit on the bitboard
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.LastBitSet(System.UInt64)">
+            <summary>
+            Returns a bitboard with only the least significant bit of the original bitboard set to 1;
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.Count(System.UInt64)">
+            <summary>
+            PopCount
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.MaskUtils.GetFile(System.Int32)">
+            <summary>
+            Returns a bitboard with all the bits for the given file switched on
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.MaskUtils.GetRank(System.Int32)">
+            <summary>
+            Returns a bitboard with all the bits for the given rank switched on
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.MaskUtils.GetUD(System.ValueTuple{System.Int32,System.Int32})">
+            <summary>
+            Returns a bitboard of the upwards (bottom left to top right) diagonal line which goes through the given square
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.MaskUtils.GetDD(System.ValueTuple{System.Int32,System.Int32})">
+            <summary>
+            Returns a bitboard of the downwards (top left to bottom right) diagonal line which goes through the given square
+            </summary>
+        </member>
+        <member name="T:ChessLib.Bitboards.Utils.MovePattern">
+            <summary>
+            Stores all directions a piece can move in as tuples, as well as whether the piece is a sliding piece (rooks, bishops, queens) or not
+            </summary>
+        </member>
+        <member name="M:ChessLib.Bitboards.Utils.MovePattern.#ctor(System.ValueTuple{System.Int32,System.Int32}[],System.Boolean)">
+            <summary>
+            Stores all directions a piece can move in as tuples, as well as whether the piece is a sliding piece (rooks, bishops, queens) or not
+            </summary>
+        </member>
+        <member name="M:ChessLib.ChessLib.Init">
+            <summary>
+            Initializes the library and completes preprocessing steps. Necessary for many functions
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.MagicLookup.Moves.RookBitboard(System.Int32,System.UInt64)">
+            <summary>
+            Returns a bitboard of all possible rook moves (captures included) on a bitboard given a set of blockers
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.MagicLookup.Moves.BishopBitboard(System.Int32,System.UInt64)">
+            <summary>
+            Returns a bitboard of all possible bishop moves (captures included) on a bitboard given a set of blockers
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.MagicLookup.Moves.QueenBitboard(System.Int32,System.UInt64)">
+            <summary>
+            Returns a bitboard of all possible queen moves (captures included) on a bitboard given a set of blockers
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.MagicLookup.Moves.SwitchBitboard(System.Byte,System.Int32,System.UInt64)">
+            <summary>
+            Returns a bitboard of all possible moves (captures included) with the given piece on a bitboard given a set of blockers
+            </summary>
+        </member>
+        <member name="T:ChessLib.Magic_Lookup.MagicNumber">
+            <summary>
+            A magic number used to perfectly hash a set of values which are known ahead of time
+            </summary>
+            <example>
+            (v * Number) >> Shift returns an index for all values of v that were taken into account. Each index is equal to or lower than Max
+            </example>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.MagicNumber.#ctor(System.UInt64,System.Int32,System.Int32)">
+            <summary>
+            A magic number used to perfectly hash a set of values which are known ahead of time
+            </summary>
+            <example>
+            (v * Number) >> Shift returns an index for all values of v that were taken into account. Each index is equal to or lower than Max
+            </example>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.MagicNumber.Calculate(System.UInt64)">
+            <summary>
+            Calculates the index for the given value
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.MagicNumber.ObjectString">
+            <summary>
+            String for creating a magic number object with matching parameters
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.MagicNumber.BetterThan(ChessLib.Magic_Lookup.MagicNumber)">
+            <summary>
+            Compares the magic number to another one and returns whether it's better or not
+            </summary>
+        </member>
+        <member name="T:ChessLib.Magic_Lookup.MagicNumbers">
+            <summary>
+            Contains the information required to perform magic lookup
+            </summary>
+        </member>
+        <member name="T:ChessLib.Magic_Lookup.Moves">
+            <summary>
+            Requires Combinations to be initialized first
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.Moves.Init">
+            <summary>
+            Initialize lookup tables. Requires combinations to be initialized
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.Moves.GenBitboardMoves(System.Int32,System.UInt64,ChessLib.Bitboards.Utils.MovePattern,System.Boolean)">
+            <summary>
+            Calculates the bitboard of legal moves from a square given a set of blockers and a piece movement pattern
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.Moves.GenMoveSet(System.Int32,System.UInt64)">
+            <summary>
+            Generates a set of moves based on a bitboard
+            </summary>
+        </member>
+        <member name="T:ChessLib.Magic_Lookup.Pins">
+            <summary>
+            Requires Combinations to be initialized first
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.Pins.Init">
+            <summary>
+            Initialize pin lookup tables. Requires combinations to be initialized
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.Utils.LookupHelper.FillLookupTable``1(``0[][],ChessLib.Magic_Lookup.MagicNumber[],System.UInt64[][],System.Func{System.Int32,System.UInt64,``0})">
+            <summary>
+            Fills a magic lookup table using the given specifications
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.Utils.LookupHelper.Lookup``1(``0[][],ChessLib.Magic_Lookup.MagicNumber[],System.Int32,System.UInt64)">
+            <summary>
+            Performs a magic lookup on the given table
+            </summary>
+        </member>
+        <member name="T:ChessLib.Magic_Lookup.Utils.PinHelper">
+            <summary>
+            Contains helper functions for dealing with pins
+            Requires pins to be initialized
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.Utils.PinHelper.PotentialPins(ChessLib.Base.Board)">
+            <summary>
+            returns a set of potential bishop and rook pins as a dictionary where the square of the pinned piece is the key and the square of the potential pinner is the value.
+            These pins still need to be tested whether they actually exist or not
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.Utils.PinHelper.FindPins(ChessLib.Base.Board)">
+            <summary>
+            Returns the set of bishop and rook pins on a given board. !Do not use when performance is important!
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.Utils.PinHelper.ValidPin(ChessLib.Base.Board,System.Collections.Generic.KeyValuePair{System.Int32,System.Int32},System.Byte)">
+            <summary>
+            Returns whether a pin is valid on a given board (assuming it was generated for the board)
+            </summary>
+        </member>
+        <member name="M:ChessLib.Magic_Lookup.Utils.PinHelper.ValidPin(ChessLib.Base.Board,System.Int32,System.Int32,System.Byte)">
+            <summary>
+            Returns whether a pin is valid on a given board (assuming it was generated for the board)
+            </summary>
+        </member>
+        <member name="T:ChessLib.Utils.ButterflyBoard`1">
+            <summary>
+            Stores a value for each pair of squares indexed as to and from
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.ButterflyBoard`1.#ctor">
+            <summary>
+            Stores a value for each pair of squares indexed as to and from
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.ButterflyBoard`1.Fill(System.Func{System.Int32,System.Int32,`0})">
+            <summary>
+            Fills the butterfly board using the given function f(int from, int to) -> T
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.ButterflyBoard`1.#ctor(System.Func{System.Int32,System.Int32,`0})">
+            <summary>
+            Fills the butterfly board using the given function f(int from, int to) -> T
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.DisplayHelper.ToBinary(System.UInt64,System.Boolean)">
+            <summary>
+            Returns the given ulong as a binary string
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.DisplayHelper.ToHex(System.UInt64,System.Boolean)">
+            <summary>
+            Returns the given ulong as a hexadecimal (base 16) string
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.DisplayHelper.ToArrayString``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns a string of an enumerable using the ToString method of the elements
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.DisplayHelper.ToArrayString``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.String})">
+            <summary>
+            Returns a string of an enumerable using the given method to convert the elements into a string
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.GeneralUtils.IsLinux">
+            <summary>
+            Returns whether the OS is Linux (and thus likely can display Unicode piece characters in the default terminal)
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.GeneralUtils.Random(System.UInt64,System.UInt64)">
+            <summary>
+            Returns a random ulong between min and max
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.GeneralUtils.IndexOf``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Returns index of value in array
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.MagicNumberGenerator.Generate(System.UInt64[],System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            Generates a magic number with a given shift for a set of distinct ulongs, and attempts to increase the shift
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.MagicNumberGenerator.Generate(System.UInt64[],System.Int32,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            For a small amount of values. Generates many magic numbers for a set of combinations and attempts to increase the shift. Returns the best one found.
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.MagicNumberGenerator.GenerateParallel(System.UInt64[],System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            For a large set of values. Generates a magic number with a given shift for a set of distinct ulongs using multiple threads.
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.SquareUtils.AsSquare(System.Int32)">
+            <summary>
+            Returns the given index as a file-rank tuple
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.SquareUtils.AsIndex(System.ValueTuple{System.Int32,System.Int32})">
+            <summary>
+            Returns the given tuple as an index
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.SquareUtils.OffsetBy(System.ValueTuple{System.Int32,System.Int32},System.ValueTuple{System.Int32,System.Int32},System.Int32)">
+            <summary>
+            Offsets the given tuple in a set direction by a set amount, then returns the result
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.SquareUtils.OffsetFile(System.ValueTuple{System.Int32,System.Int32},System.Int32)">
+            <summary>
+            Offsets the given tuple's file by a set amount, then returns the result
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.SquareUtils.OffsetRank(System.ValueTuple{System.Int32,System.Int32},System.Int32)">
+            <summary>
+            Offsets the given tuple's rank by a set amount, then returns the result
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.SquareUtils.OutOfBounds(System.ValueTuple{System.Int32,System.Int32})">
+            <summary>
+            Checks whether the given square is outside the board
+            </summary>
+        </member>
+        <member name="T:ChessLib.Utils.ThrowHelper.NotationParsingException">
+            <summary>
+            Failed to parse external string-based notation (like FEN or algebraic notation)
+            </summary>
+        </member>
+        <member name="T:ChessLib.Utils.ThrowHelper.PieceAmbiguityException">
+            <summary>
+            Failed to select piece
+            </summary>
+        </member>
+        <member name="T:ChessLib.Utils.ThrowHelper.PieceTypeNotSupported">
+            <summary>
+            The function is not meant to use the given type
+            </summary>
+        </member>
+        <member name="T:ChessLib.Utils.ThrowHelper.ChessException">
+            <summary>
+            Base class for all ChessLib exceptions
+            </summary>
+        </member>
+    </members>
+</doc>
