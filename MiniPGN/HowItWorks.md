@@ -62,15 +62,16 @@ Piece codes
 - `101` queen
 - `110` king
 
-      
 Bytes that cannot normally appear can be considered control characters
 
-`00000111` Draw
-`00001111` White won
-`00010111` Black won
-`00101111` White won by checkmate
-`00110111` Black won by checkmate
-`00111111` Unspecified
+- `07` Draw
+- `0F` White won
+- `17` Black won
+- `2F` White won by checkmate
+- `37` Black won by checkmate
+- `3F` Unspecified
+- `E7` %eval move tag
+  - Followed by 4 bytes representing a float
 
 ## Handling game metadata
 
@@ -97,9 +98,9 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - `02` "Chess.com"
   - `03` "https://lichess.org/" expects a string of characters afterwards
 - `04` Round
-  - Expects 2 bytes
-  - If the most significant bit is on, it's "?"
-  - Otherwise the bytes are interpreted as a 2 byte unsigned integer
+  - `01` null terminated string
+  - `02` next byte tells exact number
+  - `03` "?"
 - `05` White
   - null terminated string
 - `06` Black
@@ -123,11 +124,11 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
     - minute
     - second
 - `0B` TimeControl
-  - `01` Expects 4 bytes
+  - `01` expects a null-terminated string
+  - `02` Expects 4 bytes
     - 2 for time
     - 2 for bonus
-    - if the bonus is 0, it's decoded as "+0", if it's negative then it's now shown at all
-  - `02` expects a null-terminated string
+    - if the bonus is 0, it's decoded as "+0", if it's `FF FF` then it's now shown at all
 - `0C` WhiteElo
   - 2 bytes
 - `0D` BlackElo
@@ -147,21 +148,21 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - expects a null-terminated string
 - `12` Terminaton
   - `01` null-terminated string
-  - `02` normal
-  - `03` time forfeit
-  - `04` abandoned
-  - `05` adjudication
-  - `06` death
-  - `07` emergency
-  - `08` rules infraction
-  - `09` unterminated
+  - `02` Normal
+  - `03` Time forfeit
+  - `04` Abandoned
+  - `05` Adjudication
+  - `06` Death
+  - `07` Emergency
+  - `08` Rules infraction
+  - `09` Unterminated
 - `13` EndTime
   - Used by chess.com
-  - Expects 4 bytes
+  - Expects 5 bytes
     - hour
     - minute
     - second
-    - GMT+x
+    - 2 for GMT+x
 - `14` Annotator
   - null-terminated string
 - `15` PlyCount
@@ -174,9 +175,7 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - `03` ICS
 - `18` FEN
   - expects a null-terminated string
-- `19` SetUp
-  - 2 bytes
-- `1A` Not recognized
+- `FE` Not recognized
   - Followed by a null terminated string for name, then one for the value
 - `FF` Begin game
   - No longer looks for tag pairs, instead starts parsing the next byte as a game

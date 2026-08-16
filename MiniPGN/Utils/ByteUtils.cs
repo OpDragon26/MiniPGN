@@ -60,4 +60,19 @@ public static class ByteUtils
             Array.Reverse(bytes);
         return BitConverter.ToUInt64(bytes, 0);
     }
+    
+    public static byte[] ToBytes(this ushort v)
+    {
+        byte[] bytes = BitConverter.GetBytes(v);
+        if (BitConverter.IsLittleEndian)
+            Array.Reverse(bytes);
+        return bytes;
+    }
+
+    public static ulong ToUInt16(this byte[] bytes)
+    {
+        if (BitConverter.IsLittleEndian)
+            Array.Reverse(bytes);
+        return BitConverter.ToUInt16(bytes, 0);
+    }
 }

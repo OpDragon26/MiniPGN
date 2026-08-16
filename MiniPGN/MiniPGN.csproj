@@ -15,7 +15,6 @@
 
     <ItemGroup>
       <Folder Include="Minimizer\Game\" />
-      <Folder Include="Minimizer\Metadata\" />
     </ItemGroup>
 
 </Project>
