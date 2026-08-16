@@ -18,14 +18,10 @@ Metadata treatment
 
 This is followed by a handful of optional file metadata tags
 
-- `01` Date and time of encoding GMT time
-  - followed by 7 bytes
-    - 2 for year, 1 for month, 1 for day
-    - 1 for hour, 1 for minute, 1 for second
+- `01` Date and time of encoding Unix time
+  - unsigned 8 byte integer
 - `02` Number of games
   - 8 byte unsigned integer
-
-The metadata section ends with `FF`
 
 ## Move encoding
 ### Standard/default:
@@ -82,8 +78,10 @@ By game metadata, I mean all the information that can be found before a pgn in l
 
 The tag pairs are usually stored as strings, in .mpgn files they're given a byte each
 
-- `01` Not recognized
-  - Followed by a null terminated string for name, then one for the value
+- `01` Length of game
+  - Mandatory
+  - Number of bytes between the beginning of this game to the beginning of the next one (tags included)
+  - 2 byte unsigned integer
 - `02` Event
   - Followed by a byte signaling what comes after
     - `01` null terminated string
@@ -101,7 +99,7 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
 - `04` Round
   - Expects 2 bytes
   - If the most significant bit is on, it's "?"
-  - Otherwise the bytes are interpreted as an Int16
+  - Otherwise the bytes are interpreted as a 2 byte unsigned integer
 - `05` White
   - null terminated string
 - `06` Black
@@ -178,6 +176,8 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - expects a null-terminated string
 - `19` SetUp
   - 2 bytes
+- `1A` Not recognized
+  - Followed by a null terminated string for name, then one for the value
 - `FF` Begin game
   - No longer looks for tag pairs, instead starts parsing the next byte as a game
 

@@ -22,8 +22,9 @@ public static class ByteUtils
 
         if (nullTerminated)
         {
-            bytes = new byte[bytes.Length + 1];
-            Array.Copy(bytes, 0, bytes, 0, bytes.Length);
+            byte[] nBytes = new byte[bytes.Length + 1];
+            Array.Copy(bytes, 0, nBytes, 0, bytes.Length);
+            return nBytes;
         }
         
         return bytes;
@@ -43,5 +44,20 @@ public static class ByteUtils
     {
         string hex = Convert.ToString(b, 16).PadLeft(2, '0');
         return prefix ? "0x" + hex : hex;
+    }
+
+    public static byte[] ToBytes(this ulong v)
+    {
+        byte[] bytes = BitConverter.GetBytes(v);
+        if (BitConverter.IsLittleEndian)
+            Array.Reverse(bytes);
+        return bytes;
+    }
+
+    public static ulong ToUInt64(this byte[] bytes)
+    {
+        if (BitConverter.IsLittleEndian)
+            Array.Reverse(bytes);
+        return BitConverter.ToUInt64(bytes, 0);
     }
 }
