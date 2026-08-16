@@ -257,6 +257,21 @@
             Automatically fills in bitboards and the king's position based on the given piecewise board
             </summary>
         </member>
+        <member name="M:ChessLib.Base.Board.AttackedBy(System.Int32)">
+            <summary>
+            Returns a bitboard with all squares attacked by the given side
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Board.KingInCheck(System.Int32)">
+            <summary>
+            Returns whether the king of the given side is in check
+            </summary>
+        </member>
+        <member name="M:ChessLib.Base.Board.KingInCheck">
+            <summary>
+            Returns whether the king of the moving side is in check
+            </summary>
+        </member>
         <member name="T:ChessLib.Base.CastlingRights">
             <summary>
             Stores the long and short castling rights for each side
@@ -590,6 +605,11 @@
             Returns a bitboard of all possible moves (captures included) with the given piece on a bitboard given a set of blockers
             </summary>
         </member>
+        <member name="M:ChessLib.Magic_Lookup.MagicLookup.Moves.Attacks(System.Byte,System.Int32,System.UInt64,System.Int32)">
+            <summary>
+            Returns a bitboard of all possible captures with the given piece on a bitboard given a set of blockers
+            </summary>
+        </member>
         <member name="T:ChessLib.Magic_Lookup.MagicNumber">
             <summary>
             A magic number used to perfectly hash a set of values which are known ahead of time
@@ -791,6 +811,16 @@
         <member name="M:ChessLib.Utils.SquareUtils.OutOfBounds(System.ValueTuple{System.Int32,System.Int32})">
             <summary>
             Checks whether the given square is outside the board
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.SquareUtils.FileOf(System.Int32)">
+            <summary>
+            Returns the file of the square given as an index
+            </summary>
+        </member>
+        <member name="M:ChessLib.Utils.SquareUtils.RankOf(System.Int32)">
+            <summary>
+            Returns the file of the square given as an index
             </summary>
         </member>
         <member name="T:ChessLib.Utils.ThrowHelper.NotationParsingException">
