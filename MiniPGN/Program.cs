@@ -1,6 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using ChessLib.API.Display;
+﻿using ChessLib.API.Display;
 using ChessLib.Base;
+using MiniPGN.Utils;
 
-Console.WriteLine(BoardDisplay.GetBoardString(Board.StartingBoard));
+byte[] bytes = "MPGN".ToByteArray();
+
+Console.WriteLine(bytes.ToHexList());
+Console.WriteLine(bytes.GetString());

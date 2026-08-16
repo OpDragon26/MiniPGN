@@ -16,14 +16,14 @@ Metadata treatment
  - `I` - Include metadata
  - `E` - Exclude metadata
 
-This is followed by a handful of optional metadata tags
+This is followed by a handful of optional file metadata tags
 
 - `01` Date and time of encoding GMT time
   - followed by 7 bytes
     - 2 for year, 1 for month, 1 for day
     - 1 for hour, 1 for minute, 1 for second
 - `02` Number of games
-  - 8 bytes interpreted as a Uint64
+  - 8 byte unsigned integer
 
 The metadata section ends with `FF`
 

@@ -1,0 +1,47 @@
+using System.Text;
+
+namespace MiniPGN.Utils;
+
+public static class ByteUtils
+{
+    public static byte Extract(this IEnumerator<byte> bytes)
+    {
+        bytes.MoveNext();
+        return bytes.Current;
+    }
+    
+    public static IEnumerable<byte> Extract(this IEnumerator<byte> bytes, int count)
+    {
+        for (int i = 0; i < count; i++)
+            yield return bytes.Extract();
+    }
+    
+    public static byte[] ToByteArray(this string str, bool nullTerminated = false)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(str);
+
+        if (nullTerminated)
+        {
+            bytes = new byte[bytes.Length + 1];
+            Array.Copy(bytes, 0, bytes, 0, bytes.Length);
+        }
+        
+        return bytes;
+    }
+
+    public static string GetString(this byte[] bytes)
+    {
+        return bytes[^1] == 0 ? Encoding.UTF8.GetString(bytes[..^1]) : Encoding.UTF8.GetString(bytes);
+    }
+    
+    public static string ToHexList(this IEnumerable<byte> bytes, bool prefix = false)
+    {
+        return string.Join(' ', bytes.Select(b => b.ToHex(prefix)));
+    }
+
+    public static string ToHex(this byte b, bool prefix = false)
+    {
+        string hex = Convert.ToString(b, 16).PadLeft(2, '0');
+        return prefix ? "0x" + hex : hex;
+    }
+}
