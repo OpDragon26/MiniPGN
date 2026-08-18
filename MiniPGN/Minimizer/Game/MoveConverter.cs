@@ -16,7 +16,7 @@ public static class MoveConverter
         
         if (move.IsPawnRegular(board))
         {
-            if (move.IsFromLeft())
+            if (move.IsFromRight())
                 code = 0b01_000000;
             code |= move.Target.ToByteCoordinate();
             return [code];
@@ -63,9 +63,9 @@ public static class MoveConverter
         throw new ThrowHelper.MoveConverterException("Failed to parse move");
     }
 
-    static bool IsFromLeft(this Move move)
+    static bool IsFromRight(this Move move)
     {
-        return move.Source.FileOf() < move.Target.FileOf();
+        return move.Source.FileOf() > move.Target.FileOf();
     }
     
     static bool IsPawnRegular(this Move move, Board board)

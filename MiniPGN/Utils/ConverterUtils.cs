@@ -14,8 +14,9 @@ public static class ConverterUtils
         ulong knights = GetMask(board, Pieces.Knight, move.Target) & GetPiece(board, Pieces.Knight);
         ulong bishop = GetMask(board, Pieces.Bishop, move.Target) & (GetPiece(board, Pieces.Bishop) | GetPiece(board, Pieces.Queen));
         ulong rook = GetMask(board, Pieces.Rook, move.Target) & (GetPiece(board, Pieces.Rook) | GetPiece(board, Pieces.Queen));
+        ulong king = GetMask(board, Pieces.King, move.Target) & GetPiece(board, Pieces.King);
 
-        return (knights | bishop | rook).Count() == 1;
+        return (knights | bishop | rook | king).Count() == 1;
     }
 
     static ulong GetPiece(Board board, byte type)

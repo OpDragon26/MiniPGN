@@ -19,7 +19,7 @@ public static class FileParser
             if (line.StartsWith('1'))
             {
                 List<byte> game = GameParser.ConvertGame(line);
-                if (GameFinalized(game[^1]))
+                if (!GameFinalized(game[^1]))
                     game.Add(0x3F);
                 
                 AddByteCountTag(result, (ushort)(tags.Count + game.Count + 4)); // +4: one for separation, 3 for the count itself
