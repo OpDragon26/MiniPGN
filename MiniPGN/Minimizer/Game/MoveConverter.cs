@@ -38,9 +38,9 @@ public static class MoveConverter
         }
         
         Disambiguation disambiguation = FindMinimalDisambiguation(board, move);
-        byte piece = board[move.Source];
+        byte type = board[move.Source].Type();
         code = 0b111_00000;
-        code |= piece;
+        code |= type;
         
         if (disambiguation == Disambiguation.None)
         {

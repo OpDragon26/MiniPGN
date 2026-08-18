@@ -13,8 +13,7 @@ public static class FileParser
         
         foreach (string line in file)
         {
-            Console.WriteLine(line);
-            
+            //Console.WriteLine(line);
             if (line.StartsWith('['))
                 tags.AddRange(TagParser.ParseTag(line));
             if (line.StartsWith('1'))

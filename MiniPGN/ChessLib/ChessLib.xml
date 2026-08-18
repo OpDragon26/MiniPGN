@@ -490,6 +490,11 @@
             Returns the index represented by the single-square bitboard
             </summary>
         </member>
+        <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.IterateBitboard(System.UInt64)">
+            <summary>
+            Returns and IEnumerable to iterate through all enabled bits as indexes
+            </summary>
+        </member>
         <member name="M:ChessLib.Bitboards.Utils.BitboardUtils.ToBitboard(System.ValueTuple{System.Int32,System.Int32})">
             <summary>
             Returns the given file-rank tuple represented as a bitboard

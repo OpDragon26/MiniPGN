@@ -1,5 +1,6 @@
 using ChessLib.API.Parsing;
 using ChessLib.Base;
+using ChessLib.Base.Utils;
 using ChessLib.Bitboards;
 using ChessLib.Bitboards.Utils;
 using ChessLib.Utils;
@@ -10,13 +11,20 @@ public static class ConverterUtils
 {
     public static bool IsSingleMove(Board board, Move move)
     {
-        ulong mask = AllPieceMask(board, move.Target);
-        return (mask & board.Bitboards.AllColor(board.Turn)).Count() == 1;
+        ulong knights = GetMask(board, Pieces.Knight, move.Target) & GetPiece(board, Pieces.Knight);
+        ulong bishop = GetMask(board, Pieces.Bishop, move.Target) & (GetPiece(board, Pieces.Bishop) | GetPiece(board, Pieces.Queen));
+        ulong rook = GetMask(board, Pieces.Rook, move.Target) & (GetPiece(board, Pieces.Rook) | GetPiece(board, Pieces.Queen));
+
+        return (knights | bishop | rook).Count() == 1;
     }
 
-    private static ulong AllPieceMask(Board board, int index)
+    static ulong GetPiece(Board board, byte type)
     {
-        return ParsingUtils.GetFinderMask(board, Pieces.Knight, index).Mask
-            | ParsingUtils.GetFinderMask(board, Pieces.Queen, index).Mask;
+        return board.Bitboards[type.AsColor(board.Turn)];
+    }
+
+    static ulong GetMask(Board board, byte type, int square)
+    {
+        return ParsingUtils.GetFinderMask(board, type, square).Mask;
     }
 }

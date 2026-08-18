@@ -38,8 +38,13 @@ public static class GameParser
         }
                 
         Move move = board.ParseMove(token);
-        bytes.AddRange(move.Convert(board));
+        
+        byte[] moveCode = move.Convert(board);
+        //Console.WriteLine(moveCode.ToHexList());
+        bytes.AddRange(moveCode);
+        
         board.MakeMove(move);
+        
         checkMate = token[^1] == '#';
 
         if (suffix != 0)
