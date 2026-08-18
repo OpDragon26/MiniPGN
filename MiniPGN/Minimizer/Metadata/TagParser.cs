@@ -21,14 +21,12 @@ public static class TagParser
             "White" => GetTextTagBytes(0x05, data),
             "Black" => GetTextTagBytes(0x06, data),
             "Result" => GetResultTagBytes(data),
-            "Date" => GetDateTagBytes(tag, data),
-            "UTCDate" => GetDateTagBytes(tag, data),
+            "Date" or "UTCDate" => GetDateTagBytes(tag, data),
             "UTCTime" => GetTimeTagBytes(0x0A, data),
             "TimeControl" => GetTimeControlTagBytes(data),
             "WhiteElo" => GetUshortTagBytes(0x0C, data),
             "BlackElo" => GetUshortTagBytes(0x0D, data),
-            "WhiteRatingDiff" => GetEloDiffTagBytes(tag, data),
-            "BlackRatingDiff" => GetEloDiffTagBytes(tag, data),
+            "WhiteRatingDiff" or "BlackRatingDiff" => GetEloDiffTagBytes(tag, data),
             "ECO" => GetEcoCodeTagBytes(data),
             "Opening" => GetTextTagBytes(0x11, data),
             "Termination" => GetTerminationTagBytes(data),
@@ -38,12 +36,36 @@ public static class TagParser
             "Time" => GetTimeTagBytes(0x16, data),
             "Mode" => GetModeTagBytes(data),
             "FEN" => GetTextTagBytes(0x18, data),
+            "WhiteTitle" => GetTitleTagBytes(0x19, data),
+            "BlackTitle" => GetTitleTagBytes(0x1A, data),
             _ => GetUnknownTagBytes(tag, data)
         });
         
-        // TODO: Parse titles
-        
         return bytes;
+    }
+
+    static IEnumerable<byte> GetTitleTagBytes(byte tag, string data)
+    {
+        yield return tag;
+        switch (data)
+        {
+            case "GM":  yield return 0x02; break;
+            case "IM":  yield return 0x03; break;
+            case "FM":  yield return 0x04; break;
+            case "CM":  yield return 0x05; break;
+            case "WGM": yield return 0x06; break;
+            case "WIM": yield return 0x07; break;
+            case "WFM": yield return 0x08; break;
+            case "WCM": yield return 0x09; break;
+            case "NM":  yield return 0x0A; break;
+            case "SM":  yield return 0x0B; break;
+            case "LM":  yield return 0x0C; break;
+            default:
+                yield return 0x01;
+                foreach (var b in data.ToByteArray(true))
+                    yield return b;
+                break;
+        }
     }
 
     static IEnumerable<byte> GetModeTagBytes(string data)
