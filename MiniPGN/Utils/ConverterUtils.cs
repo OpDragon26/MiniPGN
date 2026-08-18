@@ -19,14 +19,4 @@ public static class ConverterUtils
         return ParsingUtils.GetFinderMask(board, Pieces.Knight, index).Mask
             | ParsingUtils.GetFinderMask(board, Pieces.Queen, index).Mask;
     }
-    
-    public static byte ToByteCoordinate(this int index)
-    {
-        return ToByteCoordinate(index.AsSquare());
-    }
-    
-    public static byte ToByteCoordinate(this (int file, int rank) square)
-    {
-        return (byte)(square.rank | (square.file << 3));
-    }
 }

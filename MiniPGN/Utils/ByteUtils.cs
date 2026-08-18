@@ -1,4 +1,5 @@
 using System.Text;
+using ChessLib.Utils;
 
 namespace MiniPGN.Utils;
 
@@ -74,5 +75,20 @@ public static class ByteUtils
         if (BitConverter.IsLittleEndian)
             Array.Reverse(bytes);
         return BitConverter.ToUInt16(bytes, 0);
+    }
+    
+    public static byte ToByteCoordinate(this int index)
+    {
+        return ToByteCoordinate(index.AsSquare());
+    }
+    
+    public static byte ToByteCoordinate(this (int file, int rank) square)
+    {
+        return (byte)(square.rank | (square.file << 3));
+    }
+
+    public static byte[] ToByteList(this float v)
+    {
+        return BitConverter.GetBytes(v);
     }
 }

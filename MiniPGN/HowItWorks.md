@@ -69,9 +69,18 @@ Bytes that cannot normally appear can be considered control characters
 - `17` Black won
 - `2F` White won by checkmate
 - `37` Black won by checkmate
-- `3F` Unspecified
+- `3F` Unspecified end of game
 - `E7` %eval move tag
   - Followed by 4 bytes representing a float
+- `EF` %eval checkmate tag
+  - Followed by a byte representing the number of moves until mate
+- `F7` Move eval suffix
+  - `01` ??
+  - `02` ?!
+  - `03` !?
+  - `04` !!
+  - `05` ?
+  - `06` !
 
 ## Handling game metadata
 

@@ -1,8 +1,19 @@
 ﻿using ChessLib.API.Display;
+using ChessLib.API.Parsing;
 using ChessLib.Base;
 using MiniPGN.File_Handling;
+using MiniPGN.Minimizer.Game;
 using MiniPGN.Utils;
 
-List<byte> bytes = FileWriter.GenFileHeader(new Config() {IncludeEncodingDate = true, IncludeGameCount = true});
+ChessLib.ChessLib.Init();
+
+Config config = new Config() { IncludeEncodingDate = true, IncludeGameCount = true };
+string game = "1. e4 c5 2. e5 e6 3. f4 Nh6 4. Nf3 Nf5 5. Bc4 f6 6. d4 Nc6 7. d5 exd5 8. Bxd5 fxe5 9. fxe5 Ncd4 10. O-O d6 11. Nxd4 cxd4 12. Qh5+ g6 13. Qf3 dxe5 14. Be4 Qf6 15. g4 Qb6 16. gxf5 d3+ 17. Kg2 Bxf5 18. Bxf5 gxf5 19. Qxf5 Be7 20. Qf7+ Kd7 21. Nc3 Qc6+ 22. Qd5+ Qxd5+ 23. Nxd5 Rhg8+ 24. Kh1 Bc5 25. cxd3 Rg6 26. Bd2 Rag8 27. Bb4 Bd4 28. Bc3 Be3 29. d4 exd4 30. Be1 d3 31. Bg3 d2 32. Nxe3 Rxg3 33. hxg3 Re8 34. Kh2 Rxe3 35. Rf2 Re1 36. Rxd2+ Kc6 37. Rxe1 Kb6 38. Ree2 a6 39. Rf2 Ka7 40. Rf3 a5 41. Rf4 b6 0-1";
+
+List<byte> bytes = []; //FileWriter.GenFileHeader(config);
+bytes.AddRange(GameParser.ConvertGame(game));
+
+Console.WriteLine(game.Length);
+Console.WriteLine(bytes.Count);
 
 Console.WriteLine(bytes.ToHexList());
