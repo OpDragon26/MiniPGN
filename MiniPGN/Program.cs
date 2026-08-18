@@ -8,12 +8,29 @@ using MiniPGN.Utils;
 ChessLib.ChessLib.Init();
 
 Config config = new Config() { IncludeEncodingDate = true, IncludeGameCount = true };
-string game = "1. e4 c5 2. e5 e6 3. f4 Nh6 4. Nf3 Nf5 5. Bc4 f6 6. d4 Nc6 7. d5 exd5 8. Bxd5 fxe5 9. fxe5 Ncd4 10. O-O d6 11. Nxd4 cxd4 12. Qh5+ g6 13. Qf3 dxe5 14. Be4 Qf6 15. g4 Qb6 16. gxf5 d3+ 17. Kg2 Bxf5 18. Bxf5 gxf5 19. Qxf5 Be7 20. Qf7+ Kd7 21. Nc3 Qc6+ 22. Qd5+ Qxd5+ 23. Nxd5 Rhg8+ 24. Kh1 Bc5 25. cxd3 Rg6 26. Bd2 Rag8 27. Bb4 Bd4 28. Bc3 Be3 29. d4 exd4 30. Be1 d3 31. Bg3 d2 32. Nxe3 Rxg3 33. hxg3 Re8 34. Kh2 Rxe3 35. Rf2 Re1 36. Rxd2+ Kc6 37. Rxe1 Kb6 38. Ree2 a6 39. Rf2 Ka7 40. Rf3 a5 41. Rf4 b6 0-1";
+string[] txtFile = [
+    "[Event \"Rated Classical game\"]",
+    "[Site \"https://lichess.org/j1dkb5dw\"]",
+    "[White \"BFG9k\"]",
+    "[Black \"mamalak\"]",
+    "[Result \"1-0\"]",
+    "[UTCDate \"2012.12.31\"]",
+    "[UTCTime \"23:01:03\"]",
+    "[WhiteElo \"1639\"]",
+    "[BlackElo \"1403\"]",
+    "[WhiteRatingDiff \"+5\"]",
+    "[BlackRatingDiff \"-8\"]",
+    "[ECO \"C00\"]",
+    "[Opening \"French Defense: Normal Variation\"]",
+    "[TimeControl \"600+8\"]",
+    "[Termination \"Normal\"]",
+    "1. e4 e6 2. d4 b6 3. a3 Bb7 4. Nc3 Nh6 5. Bxh6 gxh6 6. Be2 Qg5 7. Bg4 h5 8. Nf3 Qg6 9. Nh4 Qg5 10. Bxh5 Qxh4 11. Qf3 Kd8 12. Qxf7 Nc6 13. Qe8# 1-0",
+];
 
-MPGNFile file = FileWriter.GenFileHeader(config);
-file.body.AddRange(GameParser.ConvertGame(game));
+MPGNFile pgnFile = FileWriter.GenFileHeader(config);
+FileParser.ParsePGNFile(txtFile, pgnFile);
 
-Console.WriteLine(game.Length);
-Console.WriteLine(file.Count);
+Console.WriteLine(txtFile.CharLenght());
+Console.WriteLine(pgnFile.Count);
 
-Console.WriteLine(file.body.ToHexList());
+Console.WriteLine(pgnFile.ToHexList);

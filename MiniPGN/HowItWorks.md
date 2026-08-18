@@ -23,6 +23,8 @@ This is followed by a handful of optional file metadata tags
 - `02` Number of games
   - 8 byte unsigned integer
 
+Metadata section ends with `FF` 
+
 ## Move encoding
 ### Standard/default:
 If the first (most significant) bit of the move is `0`, that means the move is a non-promoting pawn move
@@ -88,7 +90,7 @@ By game metadata, I mean all the information that can be found before a pgn in l
 
 The tag pairs are usually stored as strings, in .mpgn files they're given a byte each
 
-- `01` Length of game
+- `01` Byte count
   - Mandatory
   - Number of bytes between the beginning of this game to the beginning of the next one (tags included)
   - 2 byte unsigned integer
@@ -184,6 +186,21 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - `03` ICS
 - `18` FEN
   - expects a null-terminated string
+- `19` WhiteTitle
+  - `01` null terminated string
+  - `02` GM
+  - `03` IM
+  - `04` FM
+  - `05` CM
+  - `06` WGM
+  - `07` WIM
+  - `08` WFM
+  - `09` WCM
+  - `0A` NM
+  - `0B` SM
+  - `0C` LM
+- `1A` BlackTitle
+  - Same as WhiteTitle
 - `FE` Not recognized
   - Followed by a null terminated string for name, then one for the value
 - `FF` Begin game

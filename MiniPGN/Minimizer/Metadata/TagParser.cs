@@ -41,6 +41,8 @@ public static class TagParser
             _ => GetUnknownTagBytes(tag, data)
         });
         
+        // TODO: Parse titles
+        
         return bytes;
     }
 

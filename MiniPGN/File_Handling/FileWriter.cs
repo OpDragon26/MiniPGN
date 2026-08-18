@@ -23,12 +23,14 @@ public static class FileWriter
         }
         
         // game count metadata
-        file.GameCountIndex = !config.IncludeGameCount ? -1 : file.Count; // needs to be changed once the number of games is actually known
+        file.GameCountIndex = !config.IncludeGameCount ? -1 : (file.Count + 1); // needs to be changed once the number of games is actually known
         if (config.IncludeGameCount)
         {
             file.header.Add(0x02);
             file.header.AddRange(0UL.ToBytes());
         }
+        
+        file.header.Add(0xFF);
         
         return file;
     }
