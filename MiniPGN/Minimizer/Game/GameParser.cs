@@ -17,35 +17,36 @@ public static class GameParser
         foreach (string token in game)
         {
             //Console.WriteLine(token);
-            
             if (token[^1] == ']')
                 ParseEvalComment(token, bytes);
             else if (token.Contains('-') && !token.Contains('O'))
                 ParseGameOverToken(token, bytes, checkMate);
             else
-            {
-                byte suffix = 0;
-                int length = 0;
-                if (TryParseMoveEvalSuffix(token, out byte s, out int l))
-                {
-                    suffix = s;
-                    length = l;
-                }
-                
-                Move move = board.ParseMove(token[..^length]);
-                bytes.AddRange(move.Convert(board));
-                board.MakeMove(move);
-                checkMate = token[..^length][^1] == '#';
-
-                if (suffix != 0)
-                {
-                    bytes.Add(0xF7);
-                    bytes.Add(suffix);
-                }
-            }
+                ParseStandardMove(token, board, bytes, out checkMate);
         }
         
         return bytes;
+    }
+
+    private static void ParseStandardMove(string token, Board board, List<byte> bytes, out bool checkMate)
+    {
+        byte suffix = 0;
+        if (TryParseMoveEvalSuffix(token, out byte s, out int l))
+        {
+            suffix = s;
+            token = token[..^l];
+        }
+                
+        Move move = board.ParseMove(token);
+        bytes.AddRange(move.Convert(board));
+        board.MakeMove(move);
+        checkMate = token[^1] == '#';
+
+        if (suffix != 0)
+        {
+            bytes.Add(0xF7);
+            bytes.Add(suffix);
+        }
     }
 
     private static bool TryParseMoveEvalSuffix(string token, out byte suffix, out int length)
