@@ -4,35 +4,33 @@ namespace MiniPGN.File_Handling;
 
 public static class FileWriter
 {
-    public static List<byte> GenFileHeader(Config config)
+    public static MPGNFile GenFileHeader(Config config)
     {
-        List<byte> bytes = [];
+        MPGNFile file = new();
         
         // signature
-        bytes.AddRange("MPGN".ToByteArray());
+        file.AddRange("MPGN".ToByteArray());
         
         // encoding type
-        bytes.Add((byte)(config.encoding == EncodingType.Standard ? 0x53 : 0x46));
-        bytes.Add((byte)(config.metadataHandling == MetadataHandling.Include ? 0x49 : 0x45));
+        file.Add((byte)(config.encoding == EncodingType.Standard ? 0x53 : 0x46));
+        file.Add((byte)(config.metadataHandling == MetadataHandling.Include ? 0x49 : 0x45));
         
         // file metadata
         if (config.IncludeEncodingDate)
         {
-            bytes.Add(0x01);
-            bytes.AddRange(UnixDateBytes());
+            file.Add(0x01);
+            file.AddRange(UnixDateBytes());
         }
         
         // game count metadata
-        int GameCountIndex = !config.IncludeGameCount ? -1 : bytes.Count; // needs to be changed once the number of games is actually known
+        file.GameCountIndex = !config.IncludeGameCount ? -1 : file.Count; // needs to be changed once the number of games is actually known
         if (config.IncludeGameCount)
         {
-            bytes.Add(0x02);
-            bytes.AddRange(0UL.ToBytes());
+            file.Add(0x02);
+            file.AddRange(0UL.ToBytes());
         }
         
-        
-        
-        return bytes;
+        return file;
     }
 
     public static byte[] UnixDateBytes()
