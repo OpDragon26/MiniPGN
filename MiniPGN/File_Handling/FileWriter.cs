@@ -9,25 +9,25 @@ public static class FileWriter
         MPGNFile file = new();
         
         // signature
-        file.AddRange("MPGN".ToByteArray());
+        file.header.AddRange("MPGN".ToByteArray());
         
         // encoding type
-        file.Add((byte)(config.encoding == EncodingType.Standard ? 0x53 : 0x46));
-        file.Add((byte)(config.metadataHandling == MetadataHandling.Include ? 0x49 : 0x45));
+        file.header.Add((byte)(config.encoding == EncodingType.Standard ? 0x53 : 0x46));
+        file.header.Add((byte)(config.metadataHandling == MetadataHandling.Include ? 0x49 : 0x45));
         
         // file metadata
         if (config.IncludeEncodingDate)
         {
-            file.Add(0x01);
-            file.AddRange(UnixDateBytes());
+            file.header.Add(0x01);
+            file.header.AddRange(UnixDateBytes());
         }
         
         // game count metadata
         file.GameCountIndex = !config.IncludeGameCount ? -1 : file.Count; // needs to be changed once the number of games is actually known
         if (config.IncludeGameCount)
         {
-            file.Add(0x02);
-            file.AddRange(0UL.ToBytes());
+            file.header.Add(0x02);
+            file.header.AddRange(0UL.ToBytes());
         }
         
         return file;
