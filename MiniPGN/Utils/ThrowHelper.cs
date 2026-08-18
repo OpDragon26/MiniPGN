@@ -17,4 +17,12 @@ public static class ThrowHelper
         public InvalidTagException (string message) : base(message) {}
         public InvalidTagException (string message, Exception innerException) : base (message, innerException) {}    
     }
+    
+    [Serializable]
+    public class MoveConverterException : MiniPGNException
+    {
+        public MoveConverterException () {}
+        public MoveConverterException (string message) : base(message) {}
+        public MoveConverterException (string message, Exception innerException) : base (message, innerException) {}    
+    }
 }
