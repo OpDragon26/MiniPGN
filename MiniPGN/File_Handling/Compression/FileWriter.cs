@@ -1,15 +1,18 @@
 using MiniPGN.Utils;
 
-namespace MiniPGN.File_Handling;
+namespace MiniPGN.File_Handling.Compression;
 
 public static class FileWriter
 {
     public static MPGNFile GenFileHeader(Config config)
     {
-        MPGNFile file = new();
+        MPGNFile file = new(config);
         
         // signature
         file.header.AddRange("MPGN".ToByteArray());
+        
+        // version
+        file.header.AddRange(Info.Version.ToBytes());
         
         // encoding type
         file.header.Add((byte)(config.encoding == EncodingType.Standard ? 0x53 : 0x46));
@@ -35,7 +38,7 @@ public static class FileWriter
         return file;
     }
 
-    public static byte[] UnixDateBytes()
+    static byte[] UnixDateBytes()
     {
         long time = DateTimeOffset.Now.ToUnixTimeSeconds();
         return ((ulong)time).ToBytes();

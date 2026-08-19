@@ -2,7 +2,7 @@ using MiniPGN.Minimizer.Game;
 using MiniPGN.Minimizer.Metadata;
 using MiniPGN.Utils;
 
-namespace MiniPGN.File_Handling;
+namespace MiniPGN.File_Handling.Compression;
 
 public static class FileParser
 {

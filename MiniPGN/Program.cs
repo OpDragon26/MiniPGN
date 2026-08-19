@@ -2,6 +2,7 @@
 using ChessLib.API.Parsing;
 using ChessLib.Base;
 using MiniPGN.File_Handling;
+using MiniPGN.File_Handling.Compression;
 using MiniPGN.Minimizer.Game;
 using MiniPGN.Utils;
 
