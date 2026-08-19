@@ -102,12 +102,10 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - Followed by a byte signaling what comes after
     - `01` null terminated string
     - `02` "Live Chess" (chess.com)
-    - `03` lichess rated game
-      - Followed by another byte for the time control
-      - `01` Bullet
-      - `02` Blitz
-      - `03` Classical
-      - `04` Correspondence
+    - `03` Rated Bullet game
+    - `04` Rated Blitz game
+    - `05` Rated Classical game
+    - `06` Rated Correspondence game
 - `03` Site
   - `01` null terminated string
   - `02` "Chess.com"
@@ -145,11 +143,11 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
     - 2 for bonus
     - if the bonus is 0, it's decoded as "+0", if it's `FF FF` then it's now shown at all
 - `0C` WhiteElo
-  - `01` 2 bytes
-  - `02` "?"
+  - 2 bytes
+  - `FF FF` "?"
 - `0D` BlackElo
-  - `01` 2 bytes
-  - `02` "?"
+  - 2 bytes
+  - `FF` "?"
 - `0E` WhiteRatingDiff
   - Used by Lichess
   - 2 bytes

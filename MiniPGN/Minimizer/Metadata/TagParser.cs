@@ -72,10 +72,9 @@ public static class TagParser
     {
         yield return tag;
         if (data.Equals("?"))
-            yield return 0x02;
+            yield return 0xFF; // surely no-one will ever reach an ELO of 65k right??
         else
         {
-            yield return 0x01;
             byte[] elo = ushort.Parse(data).ToBytes();
             yield return elo[0];
             yield return elo[1];
@@ -275,13 +274,12 @@ public static class TagParser
             yield return 0x02;
         else if (data.StartsWith("Rated ") && data.EndsWith(" game"))
         {
-            yield return 0x03;
             yield return data.Split()[1] switch
             {
-                "Bullet" => 0x01,
-                "Blitz" => 0x02,
-                "Classical" => 0x03,
-                "Correspondence" => 0x04,
+                "Bullet"         => 0x03,
+                "Blitz"          => 0x04,
+                "Classical"      => 0x05,
+                "Correspondence" => 0x06,
                 _ => throw new ThrowHelper.InvalidTagException("Invalid result data: " + data)
             };
         }
