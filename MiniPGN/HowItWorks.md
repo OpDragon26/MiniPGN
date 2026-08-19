@@ -145,9 +145,11 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
     - 2 for bonus
     - if the bonus is 0, it's decoded as "+0", if it's `FF FF` then it's now shown at all
 - `0C` WhiteElo
-  - 2 bytes
+  - `01` 2 bytes
+  - `02` "?"
 - `0D` BlackElo
-  - 2 bytes
+  - `01` 2 bytes
+  - `02` "?"
 - `0E` WhiteRatingDiff
   - Used by Lichess
   - 2 bytes

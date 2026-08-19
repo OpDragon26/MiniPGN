@@ -4,6 +4,11 @@ namespace MiniPGN.File_Handling.Compression;
 
 public static class FileWriter
 {
+    public static void WriteToFile(string path, MPGNFile file)
+    {
+        File.WriteAllBytes(path, file.ToByteArray());
+    }
+    
     public static MPGNFile GenFileHeader(Config config)
     {
         MPGNFile file = new(config);

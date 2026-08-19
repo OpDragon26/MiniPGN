@@ -20,4 +20,12 @@ public class MPGNFile(Config config)
                 header[GameCountIndex + i] = gameCountBytes[i];
         }
     }
+
+    public byte[] ToByteArray()
+    {
+        List<byte> result = new List<byte>(header.Count + body.Count);
+        result.AddRange(header);
+        result.AddRange(body);
+        return result.ToArray();
+    }
 }

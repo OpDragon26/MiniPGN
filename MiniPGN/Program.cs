@@ -5,33 +5,16 @@ using MiniPGN.File_Handling;
 using MiniPGN.File_Handling.Compression;
 using MiniPGN.Minimizer.Game;
 using MiniPGN.Utils;
+using FileWriter = MiniPGN.File_Handling.Compression.FileWriter;
 
 ChessLib.ChessLib.Init();
 
+string file = "/home/opdragon25/Downloads/lichess_rated_2012.pgn";
+string testFile = "TestFile.pgn";
+
 Config config = new Config() { IncludeEncodingDate = true, IncludeGameCount = true };
-string[] txtFile = [
-    "[Event \"Rated Classical game\"]",
-    "[Site \"https://lichess.org/j1dkb5dw\"]",
-    "[White \"BFG9k\"]",
-    "[Black \"mamalak\"]",
-    "[Result \"1-0\"]",
-    "[UTCDate \"2012.12.31\"]",
-    "[UTCTime \"23:01:03\"]",
-    "[WhiteElo \"1639\"]",
-    "[BlackElo \"1403\"]",
-    "[WhiteRatingDiff \"+5\"]",
-    "[BlackRatingDiff \"-8\"]",
-    "[ECO \"C00\"]",
-    "[Opening \"French Defense: Normal Variation\"]",
-    "[TimeControl \"600+8\"]",
-    "[Termination \"Normal\"]",
-    "1. e4 e6 2. d4 b6 3. a3 Bb7 4. Nc3 Nh6 5. Bxh6 gxh6 6. Be2 Qg5 7. Bg4 h5 8. Nf3 Qg6 9. Nh4 Qg5 10. Bxh5 Qxh4 11. Qf3 Kd8 12. Qxf7 Nc6 13. Qe8# 1-0",
-];
 
-MPGNFile pgnFile = FileWriter.GenFileHeader(config);
-FileParser.ParsePGNFile(txtFile, pgnFile);
-
-Console.WriteLine(txtFile.CharLenght());
-Console.WriteLine(pgnFile.Count);
-
-Console.WriteLine(pgnFile.ToHexList);
+MPGNFile pgnFile = FileHandler.CompressFile(file, config, false);
+Console.WriteLine("Finished conversion");
+FileWriter.WriteToFile("compressed.mpgn", pgnFile);
+//Console.WriteLine(pgnFile.ToHexList);

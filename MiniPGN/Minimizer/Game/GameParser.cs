@@ -1,3 +1,4 @@
+using ChessLib.API.Display;
 using ChessLib.API.Parsing;
 using ChessLib.Base;
 using MiniPGN.Utils;
@@ -6,7 +7,7 @@ namespace MiniPGN.Minimizer.Game;
 
 public static class GameParser
 {
-    public static List<byte> ConvertGame(string pgn)
+    public static List<byte> ConvertGame(string pgn, bool log = false)
     {
         string[] tokens = pgn.Split(' ');
         IEnumerable<string> game = tokens.Where(ImportantToken);
@@ -16,19 +17,20 @@ public static class GameParser
         bool checkMate = false;
         foreach (string token in game)
         {
-            //Console.WriteLine(token);
+            if (log)
+                Console.WriteLine(token);
             if (token[^1] == ']')
                 ParseEvalComment(token, bytes);
             else if (token.Contains('-') && !token.Contains('O'))
                 ParseGameOverToken(token, bytes, checkMate);
             else
-                ParseStandardMove(token, board, bytes, out checkMate);
+                ParseStandardMove(token, board, bytes, out checkMate, log);
         }
         
         return bytes;
     }
 
-    private static void ParseStandardMove(string token, Board board, List<byte> bytes, out bool checkMate)
+    private static void ParseStandardMove(string token, Board board, List<byte> bytes, out bool checkMate, bool log = false)
     {
         byte suffix = 0;
         if (TryParseMoveEvalSuffix(token, out byte s, out int l))
@@ -36,15 +38,22 @@ public static class GameParser
             suffix = s;
             token = token[..^l];
         }
+
+        if (log)
+        {
+            board.PrintBoard(debug: true);
+            Console.WriteLine();
+            Console.WriteLine(token);
+        }
                 
         Move move = board.ParseMove(token);
-        
         byte[] moveCode = move.Convert(board);
-        //Console.WriteLine(moveCode.ToHexList());
+        
+        if (log)
+            Console.WriteLine(moveCode.ToHexList());
+        
         bytes.AddRange(moveCode);
-        
         board.MakeMove(move);
-        
         checkMate = token[^1] == '#';
 
         if (suffix != 0)
@@ -102,7 +111,7 @@ public static class GameParser
         if (token[0] == '#')
         {
             byteList.Add(0xEF);
-            byteList.Add(byte.Parse(token[2..^1]));
+            byteList.Add((byte)sbyte.Parse(token[1..^1]));
         }
         else
         {

@@ -24,8 +24,8 @@ public static class TagParser
             "Date" or "UTCDate" => GetDateTagBytes(tag, data),
             "UTCTime" => GetTimeTagBytes(0x0A, data),
             "TimeControl" => GetTimeControlTagBytes(data),
-            "WhiteElo" => GetUshortTagBytes(0x0C, data),
-            "BlackElo" => GetUshortTagBytes(0x0D, data),
+            "WhiteElo" => GetEloTagBytes(0x0C, data),
+            "BlackElo" => GetEloTagBytes(0x0D, data),
             "WhiteRatingDiff" or "BlackRatingDiff" => GetEloDiffTagBytes(tag, data),
             "ECO" => GetEcoCodeTagBytes(data),
             "Opening" => GetTextTagBytes(0x11, data),
@@ -65,6 +65,20 @@ public static class TagParser
                 foreach (var b in data.ToByteArray(true))
                     yield return b;
                 break;
+        }
+    }
+
+    static IEnumerable<byte> GetEloTagBytes(byte tag, string data)
+    {
+        yield return tag;
+        if (data.Equals("?"))
+            yield return 0x02;
+        else
+        {
+            yield return 0x01;
+            byte[] elo = ushort.Parse(data).ToBytes();
+            yield return elo[0];
+            yield return elo[1];
         }
     }
 

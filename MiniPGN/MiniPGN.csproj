@@ -13,4 +13,10 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="TestFile.pgn">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

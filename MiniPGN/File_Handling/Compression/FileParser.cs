@@ -6,7 +6,7 @@ namespace MiniPGN.File_Handling.Compression;
 
 public static class FileParser
 {
-    public static void ParsePGNFile(string[] file, MPGNFile result)
+    public static void ParsePGNFile(string[] file, MPGNFile result, bool log = false)
     {
         ulong gameCount = 0;
         List<byte> tags = [];
@@ -14,15 +14,15 @@ public static class FileParser
         foreach (string line in file)
         {
             //Console.WriteLine(line);
-            if (line.StartsWith('['))
+            if (line.StartsWith('[') && result.Config.metadataHandling == MetadataHandling.Include)
                 tags.AddRange(TagParser.ParseTag(line));
             if (line.StartsWith('1'))
             {
-                List<byte> game = GameParser.ConvertGame(line);
+                List<byte> game = GameParser.ConvertGame(line, log);
                 if (!GameFinalized(game[^1]))
                     game.Add(0x3F);
                 
-                AddByteCountTag(result, (ushort)(tags.Count + game.Count + 4)); // +4: one for separation, 3 for the count itself
+                AddByteCountTag(result, (ushort)(tags.Count + game.Count + 4)); // +4: one for separation, 3 for the count itself 
                 result.body.AddRange(tags);
                 result.body.Add(0xFF);
                 result.body.AddRange(game);
