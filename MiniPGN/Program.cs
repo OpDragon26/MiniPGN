@@ -14,7 +14,7 @@ string testFile = "TestFile.pgn";
 
 Config config = new Config() { IncludeEncodingDate = true, IncludeGameCount = true };
 
-MPGNFile pgnFile = FileHandler.CompressFile(file, config, false);
+MPGNFile pgnFile = FileHandler.CompressFile(testFile, config, false);
 Console.WriteLine("Finished conversion");
 FileWriter.WriteToFile("/home/opdragon25/Downloads/compressed.mpgn", pgnFile);
-//Console.WriteLine(pgnFile.ToHexList);
+Console.WriteLine(pgnFile.ToHexList);

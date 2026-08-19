@@ -29,6 +29,14 @@ The length of this portion may change version to version, currently it's just tw
 
 Metadata section ends with `FF` 
 
+# Opening index
+
+A series of null-terminated strings, each corresponding to an opening that appears in the metadata tags
+
+The openings appear in the order they are present in the original file
+
+Section ends with `FF`
+
 # Move encoding
 ## Standard/default:
 If the first (most significant) bit of the move is `0`, that means the move is a non-promoting pawn move
@@ -160,7 +168,8 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
     - 1 for the number
 - `11` Opening
   - Used by Lichess
-  - expects a null-terminated string
+  - `FF` null-terminated string
+  - otherwise expects 2 bytes corresponding to an opening index
 - `12` Terminaton
   - `01` null-terminated string
   - `02` Normal

@@ -4,11 +4,13 @@ namespace MiniPGN.File_Handling;
 
 public class MPGNFile(Config config)
 {
-    public readonly List<byte> body = [];
     public readonly List<byte> header = [];
+    public readonly List<byte> opening = [];
+    public readonly List<byte> body = [];
+    
     public int GameCountIndex;
-    public int Count => header.Count + body.Count;
-    public string ToHexList => header.ToHexList() + " " + body.ToHexList();
+    public int Count => header.Count + opening.Count + body.Count;
+    public string ToHexList => header.ToHexList() + " " + opening.ToHexList() + " " + body.ToHexList();
     public readonly Config Config = config;
     
     public void AddGameCount(ulong gameCount)
@@ -23,8 +25,9 @@ public class MPGNFile(Config config)
 
     public byte[] ToByteArray()
     {
-        List<byte> result = new List<byte>(header.Count + body.Count);
+        List<byte> result = new List<byte>(Count);
         result.AddRange(header);
+        result.AddRange(opening);
         result.AddRange(body);
         return result.ToArray();
     }

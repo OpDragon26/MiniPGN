@@ -32,9 +32,17 @@ public static class FileParser
             }
         }
         
+        GenOpeningIndex(result);
         result.AddGameCount(gameCount);
     }
 
+    static void GenOpeningIndex(MPGNFile result)
+    {
+        foreach (string opening in OpeningDatabase.IndexTable)
+            result.opening.AddRange(opening.ToByteArray(true));
+        result.opening.Add(0xFF);
+    }
+    
     static void AddByteCountTag(MPGNFile file, ushort count)
     {
         file.body.Add(0x01);

@@ -17,6 +17,7 @@ public static class GameParser
         bool checkMate = false;
         foreach (string token in game)
         {
+            Console.WriteLine(token);
             if (log)
                 Console.WriteLine(token);
             if (token[^1] == ']')

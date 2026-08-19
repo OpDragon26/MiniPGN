@@ -28,7 +28,7 @@ public static class TagParser
             "BlackElo" => GetEloTagBytes(0x0D, data),
             "WhiteRatingDiff" or "BlackRatingDiff" => GetEloDiffTagBytes(tag, data),
             "ECO" => GetEcoCodeTagBytes(data),
-            "Opening" => GetTextTagBytes(0x11, data),
+            "Opening" => GetOpeningTagBytes(data),
             "Termination" => GetTerminationTagBytes(data),
             "EndTime" => GetEndTimeTagBytes(data),
             "Annotator" => GetTextTagBytes(0x14, data),
@@ -221,6 +221,14 @@ public static class TagParser
             "1/2-1/2" => 0x03,
             _ => throw new ThrowHelper.InvalidTagException("Invalid result data: " + data)
         };
+    }
+
+    static IEnumerable<byte> GetOpeningTagBytes(string data)
+    {
+        yield return 0x11;
+        byte[] index = OpeningDatabase.Index(data).ToBytes();
+        yield return index[0];
+        yield return index[1];
     }
 
     static IEnumerable<byte> GetTextTagBytes(byte tag, string data)
