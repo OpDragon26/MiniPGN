@@ -52,6 +52,8 @@ if the first bit is `1`
  - if the second bit is `1`
    - The next 6 bits and the following 3 bytes correspond to a player index smaller or equal to 1,073,741,823
 
+Section ends with `FF`
+
 # Move encoding
 
 ## Standard/default:

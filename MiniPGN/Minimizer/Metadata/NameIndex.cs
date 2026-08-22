@@ -8,6 +8,7 @@ public static class NameIndex
 
     public static void Add(string name)
     {
+        //Console.WriteLine(name);
         NameCounter.AddCount(name);
     }
     
@@ -23,13 +24,21 @@ public static class NameIndex
     }
 
     private static Dictionary<string, uint> Indexer = new();
+    public static List<string> NameList = new();
 
     public static void IndexNames()
     {
         Indexer = new();
         uint index = 0;
         
+        Indexer.Clear();
+        NameList.Clear();
+
         foreach (string name in NameCounter.GetSorted().Reverse().Select(x => x.Key))
+        {
+            Console.WriteLine($"{name} - {index}");
             Indexer.Add(name, index++);
+            NameList.Add(name);
+        }
     }
 }

@@ -1,4 +1,5 @@
 using MiniPGN.Minimizer;
+using MiniPGN.Minimizer.Metadata;
 using MiniPGN.Utils;
 
 namespace MiniPGN.File_Handling;
@@ -7,6 +8,7 @@ public class MPGNFile(Config config)
 {
     public readonly List<byte> header = [];
     public readonly List<byte> opening = [];
+    public readonly List<byte> players = [];
     public readonly List<GameData> body = [];
     
     public int GameCountIndex;
@@ -29,6 +31,7 @@ public class MPGNFile(Config config)
         List<byte> result = new List<byte>(Count);
         result.AddRange(header);
         result.AddRange(opening);
+        result.AddRange(players);
         foreach (GameData data in body)
         {
             data.InsertNames();

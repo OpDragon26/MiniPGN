@@ -23,8 +23,12 @@ public static class FileParser
                 List<byte> game = GameParser.ConvertGame(line, log);
                 if (!GameFinalized(game[^1]))
                     game.Add(0x3F);
+
+                // byte count
+                ushort count = (ushort)(tags.Count + game.Count + 4); // +4: one for separation, 3 for the count itself 
+                data.ByteList.Add(0x01);
+                data.ByteList.AddRange(count.ToBytes());
                 
-                AddByteCountTag(data.ByteList, (ushort)(tags.Count + game.Count + 4)); // +4: one for separation, 3 for the count itself 
                 data.ByteList.AddRange(tags);
                 data.ByteList.Add(0xFF);
                 data.ByteList.AddRange(game);
@@ -35,7 +39,9 @@ public static class FileParser
             }
         }
         
+        NameIndex.IndexNames();
         GenOpeningIndex(result);
+        GenPlayerIndex(result);
         result.AddGameCount(gameCount);
     }
 
@@ -44,6 +50,13 @@ public static class FileParser
         foreach (string opening in OpeningDatabase.IndexTable)
             result.opening.AddRange(opening.ToByteArray(true));
         result.opening.Add(0xFF);
+    }
+
+    static void GenPlayerIndex(MPGNFile result)
+    {
+        foreach (string name in NameIndex.NameList)
+            result.players.AddRange(name.ToByteArray(true));
+        result.players.Add(0xFF);
     }
     
     static void AddByteCountTag(List<byte> bytes, ushort count)
