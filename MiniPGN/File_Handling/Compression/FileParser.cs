@@ -36,6 +36,7 @@ public static class FileParser
                 gameCount++;
                 tags = [];
                 result.body.Add(data);
+                data = new();
             }
         }
         

@@ -35,6 +35,7 @@ public class MPGNFile(Config config)
         foreach (GameData data in body)
         {
             data.InsertNames();
+            //Console.WriteLine(data.ByteList.Count);
             result.AddRange(data.ByteList);
         }
         return result.ToArray();

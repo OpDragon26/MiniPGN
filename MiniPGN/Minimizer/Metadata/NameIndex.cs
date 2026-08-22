@@ -36,7 +36,7 @@ public static class NameIndex
 
         foreach (string name in NameCounter.GetSorted().Reverse().Select(x => x.Key))
         {
-            Console.WriteLine($"{name} - {index}");
+            //Console.WriteLine($"{name} - {index}");
             Indexer.Add(name, index++);
             NameList.Add(name);
         }
