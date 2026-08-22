@@ -37,8 +37,25 @@ The openings appear in the order they are present in the original file
 
 Section ends with `FF`
 
+# Player index
+
+Similarly to the opening index, this is a list of all players that appear within the file
+
+Index based on number of appearances, the more a player appears, the lower their index, and lower the amount of bytes required
+
+if the first bit is `0`
+ - the byte corresponds to a player index smaller or equal to 127
+
+if the first bit is `1`
+ - if the second bit is `0`
+   - The next 6 bits and the following byte correspond to a player index smaller or equal to 16,383
+ - if the second bit is `1`
+   - The next 6 bits and the following 3 bytes correspond to a player index smaller or equal to 1,073,741,823
+
 # Move encoding
+
 ## Standard/default:
+
 If the first (most significant) bit of the move is `0`, that means the move is a non-promoting pawn move
 
 - If the second bit is `0`, either a pawn is moving forward to the square or capturing it from the left (from white's perspective) and if it's a `1`, a pawn capturing from the right
@@ -123,9 +140,9 @@ The tag pairs are usually stored as strings, in .mpgn files they're given a byte
   - `02` next byte tells exact number
   - `03` "?"
 - `05` White
-  - null terminated string
+  - Player index
 - `06` Black
-  - null terminated string
+  - Player index
 - `07` Result
   - `01` white won 1-0
   - `02` black won 0-1

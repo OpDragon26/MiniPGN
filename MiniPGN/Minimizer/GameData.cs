@@ -30,9 +30,6 @@ public class GameData
             return;
         namesInserted = true;
         
-        Console.WriteLine(BlackName);
-        Console.WriteLine(WhiteName);
-        
         if (BlackInsertionPoint != -1 && BlackName is not null)
             ByteList.InsertRange(BlackInsertionPoint, NameIndex.GetNameIndex(BlackName));
         if (WhiteInsertionPoint != -1 && WhiteName is not null)

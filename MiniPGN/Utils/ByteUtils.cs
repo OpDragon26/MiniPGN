@@ -77,6 +77,21 @@ public static class ByteUtils
         return BitConverter.ToUInt16(bytes, 0);
     }
     
+    public static byte[] ToBytes(this uint v)
+    {
+        byte[] bytes = BitConverter.GetBytes(v);
+        if (BitConverter.IsLittleEndian)
+            Array.Reverse(bytes);
+        return bytes;
+    }
+    
+    public static ulong ToUInt32(this byte[] bytes)
+    {
+        if (BitConverter.IsLittleEndian)
+            Array.Reverse(bytes);
+        return BitConverter.ToUInt32(bytes, 0);
+    }
+    
     public static byte ToByteCoordinate(this int index)
     {
         return ToByteCoordinate(index.AsSquare());
