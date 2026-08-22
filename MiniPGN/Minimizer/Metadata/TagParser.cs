@@ -1,11 +1,12 @@
 using System.Text.RegularExpressions;
+using MiniPGN.File_Handling;
 using MiniPGN.Utils;
 
 namespace MiniPGN.Minimizer.Metadata;
 
 public static class TagParser
 {
-    public static List<byte> ParseTag(string line)
+    public static List<byte> ParseTag(string line, GameData gameData, int byteCount)
     {
         List<byte> bytes = [];
         
@@ -18,8 +19,8 @@ public static class TagParser
             "Event" => GetEventTagBytes(data),
             "Site" => GetSiteTagBytes(data),
             "Round" => GetRoundTagBytes(data),
-            "White" => GetTextTagBytes(0x05, data),
-            "Black" => GetTextTagBytes(0x06, data),
+            "White" => GetNameTagBytes(0x05, data, gameData, byteCount),
+            "Black" => GetNameTagBytes(0x06, data, gameData, byteCount),
             "Result" => GetResultTagBytes(data),
             "Date" or "UTCDate" => GetDateTagBytes(tag, data),
             "UTCTime" => GetTimeTagBytes(0x0A, data),
@@ -42,6 +43,17 @@ public static class TagParser
         });
         
         return bytes;
+    }
+
+    static IEnumerable<byte> GetNameTagBytes(byte tag, string data, GameData gameData, int byteCount)
+    {
+        byteCount++;
+        if (tag == 0x05)
+            gameData.SaveWhiteName(data, byteCount);
+        else
+            gameData.SaveBlackName(data, byteCount);
+        NameIndex.Add(data);
+        return [tag];
     }
 
     static IEnumerable<byte> GetTitleTagBytes(byte tag, string data)
